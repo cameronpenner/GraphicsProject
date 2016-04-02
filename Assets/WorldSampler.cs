@@ -14,29 +14,9 @@ internal class WorldSampler
 		voxel.on = false;
 
 		var height = TerrainAmplitude * Mathf.PerlinNoise(NoiseScale * x + NoiseOffset, NoiseScale * z + NoiseOffset) + TerrainOffset;
-		//Debug.Log(height);
-		//Debug.Log("Height at [" + x + ", " + y+"]: " + Mathf.PerlinNoise(NoiseScale * x, NoiseScale * z));
-		if(y < height)
+
+		if(y < height && y+1 > height)
 			voxel.on = true;
-		/*if(y < 16)
-		{
-			voxel.on = true;
-		}
-		else if(y == 16)
-		{
-			if(Random.Range(0, 2) < 1)
-			{
-				voxel.on = false;
-			}
-			else
-			{
-				voxel.on = true;
-			}
-		}
-		else
-		{
-			voxel.on = false;
-		}*/
 
 		return voxel;
 	}
