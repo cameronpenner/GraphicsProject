@@ -1,13 +1,22 @@
 ﻿using UnityEngine;
 
-class WorldSampler
+internal class WorldSampler
 {
+	private float TerrainAmplitude = 10;
+	private float TerrainOffset = 4;
+	private float NoiseScale = 0.05f;
+
 	public Voxel SamplePosition(int x, int y, int z)
 	{
 		Voxel voxel = new Voxel();
 		voxel.on = false;
 
-		if(y < 16)
+		var height = TerrainAmplitude * Mathf.PerlinNoise(NoiseScale * x, NoiseScale * z) + TerrainOffset;
+		//Debug.Log(height);
+		//Debug.Log("Height at [" + x + ", " + y+"]: " + Mathf.PerlinNoise(NoiseScale * x, NoiseScale * z));
+		if(y < height)
+			voxel.on = true;
+		/*if(y < 16)
 		{
 			voxel.on = true;
 		}
@@ -25,8 +34,8 @@ class WorldSampler
 		else
 		{
 			voxel.on = false;
-		}
-		
+		}*/
+
 		return voxel;
 	}
 }

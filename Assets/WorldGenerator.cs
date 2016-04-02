@@ -19,7 +19,7 @@ public class WorldGenerator : MonoBehaviour
 		_loadedChunks = new List<Chunk>();
 
 		GenerateChunk(0, 0, 0);
-		GenerateChunk(32, 0, 0);
+		GenerateChunk(1, 0, 0);
 	}
 
 	private void Update()
@@ -28,17 +28,17 @@ public class WorldGenerator : MonoBehaviour
 
 	private Chunk GenerateChunk(int chunkX, int chunkY, int chunkZ)
 	{
-		GameObject chunkGO = (GameObject)Instantiate(_chunkPrefab, new Vector3(chunkX, chunkY, chunkZ), Quaternion.Euler(0, 0, 0));
+		GameObject chunkGO = (GameObject)Instantiate(_chunkPrefab, new Vector3(0,0,0), Quaternion.Euler(0, 0, 0));
 		Chunk chunk = chunkGO.GetComponent<Chunk>();
 		chunk.Initialize(new Vector3(chunkX, chunkY, chunkZ));
 
-		for(int x = 0; x < 32; x++)
+		for(int x = 0; x < Chunk.ChunkSize.x; x++)
 		{
-			for(int y = 0; y < 32; y++)
+			for(int y = 0; y < Chunk.ChunkSize.y; y++)
 			{
-				for(int z = 0; z < 32; z++)
+				for(int z = 0; z < Chunk.ChunkSize.z; z++)
 				{
-					var voxel = _sampler.SamplePosition(x, y, z);
+					var voxel = _sampler.SamplePosition((int)(chunkX*Chunk.ChunkSize.x + x), (int)(chunkY * Chunk.ChunkSize.y + y), (int)(chunkZ * Chunk.ChunkSize.z) + z);
 
 					chunk.SetVoxel(voxel, x, y, z);
 				}
