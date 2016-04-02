@@ -1,4 +1,4 @@
-﻿class Voxel : IVoxel
+﻿public class Voxel
 {
 	public bool on;
 }
