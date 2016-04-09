@@ -28,4 +28,17 @@ public class Chunk : MonoBehaviour
 			block.transform.SetParent(transform);
 		}
 	}
+
+	public void UnloadChunk()
+	{
+		Debug.Log("chunk removed");
+		/*foreach(Transform child in transform)
+		{
+			GameObject.Destroy(child.gameObject);
+		}*/
+		Destroy(gameObject);
+		/*int children = transform.childCount;
+		for(int i = 0; i < children; i++)
+			transform.GetChild(i).;*/
+	}
 }
