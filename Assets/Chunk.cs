@@ -7,6 +7,9 @@ public class Chunk : MonoBehaviour
 	[SerializeField]
 	private GameObject _block;
 
+	[SerializeField]
+	private MeshFilter _meshFilter;
+
 	private Voxel[,,] _blocks;
 	private Vector3 _chunckPosition;
 
@@ -27,6 +30,11 @@ public class Chunk : MonoBehaviour
 			GameObject block = (GameObject)Instantiate(_block, chunkPos + new Vector3(x, y, z), Quaternion.Euler(0, 0, 0));
 			block.transform.SetParent(transform);
 		}
+	}
+
+	public void UpdateMesh()
+	{
+		_meshFilter.mesh = MeshGenerator.GenerateMesh(_blocks);
 	}
 
 	public void UnloadChunk()

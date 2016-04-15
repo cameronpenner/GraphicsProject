@@ -24,7 +24,7 @@ internal class WorldSampler
 	private float PerlinSample(float x, float z)
 	{
 		var height = (TerrainAmplitude/3) * Mathf.PerlinNoise(NoiseScale * x + NoiseOffset, NoiseScale * z + NoiseOffset);
-		height += TerrainAmplitude * 2 * Mathf.PerlinNoise((NoiseScale /10)* x + NoiseOffset, (NoiseScale/10) * z + NoiseOffset);
+		height += TerrainAmplitude * 4 * Mathf.PerlinNoise((NoiseScale /10)* x + NoiseOffset, (NoiseScale/10) * z + NoiseOffset);
 		//height += TerrainOffset;
 		return height;
 	}

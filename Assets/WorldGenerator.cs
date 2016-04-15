@@ -23,14 +23,10 @@ public class WorldGenerator : MonoBehaviour
 		_sampler = new WorldSampler();
 		_loadedChunks = new Dictionary<Vector3, Chunk>();
 
-		_player = ((GameObject)Instantiate(_playerPrefab, new Vector3(0, 40, 0), Quaternion.Euler(0, 0, 0))).transform;
+		_player = ((GameObject)Instantiate(_playerPrefab, new Vector3(0, 110, 0), Quaternion.Euler(0, 0, 0))).transform;
 
 		StartCoroutine("LoadChunks");
 		StartCoroutine("UnloadChunks");
-	}
-
-	private void Update()
-	{
 	}
 
 	private IEnumerator LoadChunks()
@@ -49,11 +45,15 @@ public class WorldGenerator : MonoBehaviour
 			{
 				for(int z = startz; z <= endz; z++)
 				{
-					if(!_loadedChunks.ContainsKey(new Vector3(x, 0, z)))
+					for(int y = 0; y < 4; y++)
 					{
-						Chunk chunk = GenerateChunk(x, 0, z);
-						_loadedChunks.Add(new Vector3(x, 0, z), chunk);
-						yield return new WaitForSeconds(.01f);
+						if(!_loadedChunks.ContainsKey(new Vector3(x, y, z)))
+						{
+							Chunk chunk = GenerateChunk(x, y, z);
+							chunk.UpdateMesh();
+							_loadedChunks.Add(new Vector3(x, y, z), chunk);
+							yield return new WaitForSeconds(.01f);
+						}
 					}
 				}
 			}
@@ -70,14 +70,6 @@ public class WorldGenerator : MonoBehaviour
 			{
 				foreach(Vector3 point in _loadedChunks.Keys)
 				{
-					int playerx = (int)Mathf.Floor(_player.position.x / Chunk.ChunkSize.x);
-					int playerz = (int)Mathf.Floor(_player.position.z / Chunk.ChunkSize.z);
-
-					int startx = playerx - _viewDistance / 2;
-					int startz = playerz - _viewDistance / 2;
-					int endx = playerx + _viewDistance / 2;
-					int endz = playerz + _viewDistance / 2;
-
 					/*if(startx < point.x || point.x < endx ||
 						startz < point.z || point.z < endz)*/
 					if(Vector3.Distance(point, _player.transform.position / Chunk.ChunkSize.x) > _viewDistance)
@@ -87,16 +79,16 @@ public class WorldGenerator : MonoBehaviour
 						{
 							chunk.UnloadChunk();
 							_loadedChunks.Remove(point);
+							Debug.Log("unloading....");
 						}
 					}
-					Debug.Log("unloading....");
 				}
 			}
 			catch
 			{
 				Debug.LogError("OOPS CAN:T DO THINGS");
 			}
-			yield return new WaitForSeconds(.01f);
+			yield return new WaitForSeconds(.1f);
 		}
 	}
 
