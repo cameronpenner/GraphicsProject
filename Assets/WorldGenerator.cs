@@ -22,6 +22,7 @@ public class WorldGenerator : MonoBehaviour
 	{
 		_sampler = new WorldSampler();
 		_loadedChunks = new Dictionary<Vector3, Chunk>();
+		MeshGenerator.SetChunkReference(_loadedChunks);
 
 		_player = ((GameObject)Instantiate(_playerPrefab, new Vector3(0, 110, 0), Quaternion.Euler(0, 0, 0))).transform;
 

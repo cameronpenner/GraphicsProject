@@ -13,11 +13,11 @@ public class Chunk : MonoBehaviour
 	private MeshCollider _meshCollider;
 
 	private Voxel[,,] _blocks;
-	private Vector3 _chunckPosition;
+	private Vector3 _chunkPosition;
 
 	public void Initialize(Vector3 chunkPosition)
 	{
-		_chunckPosition = chunkPosition;
+		_chunkPosition = chunkPosition;
 
 		_blocks = new Voxel[(int)ChunkSize.x, (int)ChunkSize.y, (int)ChunkSize.z];
 	}
@@ -28,7 +28,7 @@ public class Chunk : MonoBehaviour
 
 		if(voxel.on)
 		{
-			var chunkPos = new Vector3(_chunckPosition.x * ChunkSize.x, _chunckPosition.y * ChunkSize.y, _chunckPosition.z * ChunkSize.z);
+			var chunkPos = new Vector3(_chunkPosition.x * ChunkSize.x, _chunkPosition.y * ChunkSize.y, _chunkPosition.z * ChunkSize.z);
 			//remove this once mesh generation is in
 			GameObject block = (GameObject)Instantiate(_block, chunkPos + new Vector3(x, y, z), Quaternion.Euler(0, 0, 0));
 			block.transform.SetParent(transform);
@@ -37,7 +37,7 @@ public class Chunk : MonoBehaviour
 
 	public void UpdateMesh()
 	{
-		_meshFilter.mesh = MeshGenerator.GenerateMesh(_blocks);
+		_meshFilter.mesh = MeshGenerator.GenerateMesh(_chunkPosition);
 		_meshCollider.sharedMesh = _meshFilter.mesh;
 	}
 
