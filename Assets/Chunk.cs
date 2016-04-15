@@ -2,15 +2,18 @@
 
 public class Chunk : MonoBehaviour
 {
-	public static readonly Vector3 ChunkSize = new Vector3(16,16,16);
+	public static readonly Vector3 ChunkSize = new Vector3(16, 16, 16);
 
 	[SerializeField]
 	private GameObject _block;
 
 	[SerializeField]
 	private MeshFilter _meshFilter;
+
 	[SerializeField]
 	private MeshCollider _meshCollider;
+
+	private Mesh _mesh;
 
 	private Voxel[,,] _blocks;
 	private Vector3 _chunkPosition;
@@ -37,8 +40,9 @@ public class Chunk : MonoBehaviour
 
 	public void UpdateMesh()
 	{
-		_meshFilter.mesh = MeshGenerator.GenerateMesh(_chunkPosition);
-		_meshCollider.sharedMesh = _meshFilter.mesh;
+		_mesh = MeshGenerator.GenerateMesh(_chunkPosition);
+		_meshFilter.mesh = _mesh;
+		_meshCollider.sharedMesh = _mesh;
 	}
 
 	public void UnloadChunk()
