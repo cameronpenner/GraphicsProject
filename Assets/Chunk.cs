@@ -57,4 +57,9 @@ public class Chunk : MonoBehaviour
 		for(int i = 0; i < children; i++)
 			transform.GetChild(i).;*/
 	}
+
+    public bool VoxelAt(int x, int y, int z)
+    {
+        return _blocks[x, y, z].on;
+    }
 }
