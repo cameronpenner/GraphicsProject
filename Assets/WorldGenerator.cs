@@ -32,6 +32,12 @@ public class WorldGenerator : MonoBehaviour
 
 	private IEnumerator LoadChunks()
 	{
+        Chunk chunk = GenerateChunk(0, 0, 0);
+        _loadedChunks.Add(new Vector3(0, 0, 0), chunk);
+        chunk.UpdateMesh();
+
+        yield return new WaitForSeconds(1);
+        /*
 		while(true)
 		{
 			int playerx = (int)Mathf.Floor(_player.position.x / Chunk.ChunkSize.x);
@@ -51,9 +57,10 @@ public class WorldGenerator : MonoBehaviour
 						if(!_loadedChunks.ContainsKey(new Vector3(x, y, z)))
 						{
 							Chunk chunk = GenerateChunk(x, y, z);
-							chunk.UpdateMesh();
 							_loadedChunks.Add(new Vector3(x, y, z), chunk);
-							yield return new WaitForSeconds(.01f);
+                            chunk.UpdateMesh();
+
+                            yield return new WaitForSeconds(.01f);
 						}
 					}
 				}
@@ -61,18 +68,21 @@ public class WorldGenerator : MonoBehaviour
 
 			yield return new WaitForSeconds(.01f);
 		}
+        */
 	}
 
 	private IEnumerator UnloadChunks()
 	{
-		while(true)
+        yield return new WaitForSeconds(1f);
+        /*
+        while (true)
 		{
 			try
 			{
 				foreach(Vector3 point in _loadedChunks.Keys)
 				{
-					/*if(startx < point.x || point.x < endx ||
-						startz < point.z || point.z < endz)*/
+					//if(startx < point.x || point.x < endx ||
+						//startz < point.z || point.z < endz)
 					if(Vector3.Distance(point, _player.transform.position / Chunk.ChunkSize.x) > _viewDistance)
 					{
 						Chunk chunk;
@@ -91,6 +101,7 @@ public class WorldGenerator : MonoBehaviour
 			}
 			yield return new WaitForSeconds(.1f);
 		}
+        */
 	}
 
 	private Chunk GenerateChunk(int chunkX, int chunkY, int chunkZ)
