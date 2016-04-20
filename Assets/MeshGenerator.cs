@@ -134,14 +134,14 @@ internal class MeshGenerator
 				1, 12, 10,
 			}
 		},
-        { // 12 NONE GENERATED??? Test when more advancet terrain is implemented
+        { // 12
             58,
 			new int[]
 			{
 				3, 4, 11,
-				1, 2, 9,
-				8, 2, 9,
-				8, 2, 6,
+				1, 9, 2,
+			    8, 2, 9,
+				8, 6, 2,
 			}
 		},
         { // 13 NONE GENERATED??? Test when more advancet terrain is implemented
