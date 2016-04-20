@@ -98,7 +98,7 @@ public class WorldGenerator : MonoBehaviour
 
 	private Chunk GenerateChunk(int chunkX, int chunkY, int chunkZ)
 	{
-		GameObject chunkGO = (GameObject)Instantiate(_chunkPrefab, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
+		GameObject chunkGO = (GameObject)Instantiate(_chunkPrefab, new Vector3(chunkX*Chunk.ChunkSize.x, chunkY * Chunk.ChunkSize.y, chunkZ * Chunk.ChunkSize.z), Quaternion.Euler(0, 0, 0));
 		Chunk chunk = chunkGO.GetComponent<Chunk>();
 		chunk.Initialize(new Vector3(chunkX, chunkY, chunkZ));
 
