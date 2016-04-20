@@ -258,38 +258,6 @@ internal class MeshGenerator
 		return mesh;
 	}
 
-	private static void addToMesh(Mesh mesh, int x, int y, int z, int[] addTriangles)
-	{
-		Vector3[] vertices = mesh.vertices;
-		//Vector2[] uv = mesh.uv;
-		int[] triangles = mesh.triangles;
-
-		// Transform and add new vertices
-		Vector3[] newVertices = new Vector3[vertices.Length + BaseVertices.Length];
-		for(int i = 0; i < vertices.Length; i++)
-		{
-			newVertices[i] = vertices[i];
-		}
-
-		//Rotate
-
-		//Translate
-
-		for(int i = 0; i < BaseVertices.Length; i++)
-		{
-			newVertices[i + vertices.Length] = BaseVertices[i] + new Vector3(x, y, z);
-		}
-
-		int[] newTriangles = new int[triangles.Length + addTriangles.Length];
-
-		// Add triangles according to indexes of new vertices
-
-		// Reassign to mesh
-		mesh.vertices = newVertices;
-		//mesh.uv = uv;
-		mesh.triangles = newTriangles;
-	}
-
 	//TODO return rotation reference along with triangles, or rotated vertices
 	private static int[] getTriangles(int[] matchVertices)
 	{
