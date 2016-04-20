@@ -53,7 +53,7 @@ internal class MeshGenerator
 				2, 9, 10
 			}
 		},
-		{ // 3
+		{ // 3 NONE GENERATED??? Test when more advancet terrain is implemented
             5,
 			new int[]
 			{
@@ -61,7 +61,7 @@ internal class MeshGenerator
 				2, 3, 12
 			}
 		},
-		{ // 4
+        { // 4 NONE GENERATED??? Test when more advancet terrain is implemented
             65,
 			new int[]
 			{
@@ -73,12 +73,12 @@ internal class MeshGenerator
             50,
 			new int[]
 			{
-				1, 2, 9,
-				2, 8, 9,
-				2, 6, 8
+				1, 9, 2,
+				2, 9, 8,
+				2, 8, 6
 			}
 		},
-		{ // 6
+        { // 6 NONE GENERATED??? Test when more advancet terrain is implemented
             67,
 			new int[]
 			{
@@ -87,7 +87,7 @@ internal class MeshGenerator
 				6, 7, 12
 			}
 		},
-		{ // 7
+        { // 7 NONE GENERATED??? Test when more advancet terrain is implemented
             74,
 			new int[]
 			{
@@ -100,21 +100,21 @@ internal class MeshGenerator
             51,
 			new int[]
 			{
-				4, 6, 8,
-				4, 6, 2,
+				6, 4, 8,
+				2, 4, 6,
 			}
 		},
-		{ // 9
+        { // 9 NONE GENERATED??? Test when more advancet terrain is implemented
             177,
 			new int[]
 			{
-				4, 7, 11,
+				4, 11, 7,
 				4, 7, 1,
-				6, 7, 1,
+				6, 1, 7,
 				6, 10, 1,
 			}
 		},
-		{ // 10
+        { // 10 NONE GENERATED??? Test when more advancet terrain is implemented
             105,
 			new int[]
 			{
@@ -124,17 +124,17 @@ internal class MeshGenerator
 				5, 10, 12
 			}
 		},
-		{ // 11
+        { // 11 NONE GENERATED??? Test when more advancet terrain is implemented
             113,
 			new int[]
 			{
 				1, 4, 8,
-				1, 12, 8,
-				7, 12, 8,
+				1, 8, 12,
+			    7, 12, 8,
 				1, 12, 10,
 			}
 		},
-		{ // 12
+        { // 12 NONE GENERATED??? Test when more advancet terrain is implemented
             58,
 			new int[]
 			{
@@ -144,7 +144,7 @@ internal class MeshGenerator
 				8, 2, 6,
 			}
 		},
-		{ // 13
+        { // 13 NONE GENERATED??? Test when more advancet terrain is implemented
             165,
 			new int[]
 			{
@@ -158,10 +158,10 @@ internal class MeshGenerator
             178,
 			new int[]
 			{
-				1, 11, 9,
+				1, 9, 11,
 				1, 11, 6,
-				1, 2, 6,
-				7, 11, 6,
+				1, 6, 2,
+				7, 6, 11,
 			}
 		}
 	};
