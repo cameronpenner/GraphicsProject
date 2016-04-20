@@ -32,29 +32,22 @@ internal class MeshGenerator
     };
 
     // Dictionary of Active Voxels corresponding to Triangle Indices. 
-    private static readonly Dictionary<int[], int[]> VerticesToTriangles = new Dictionary<int[], int[]>
+    private static readonly Dictionary<int, int[]> VerticesToTriangles = new Dictionary<int, int[]>
     {
         { // 0
-            new int[] 
-            {},
+            0,
             new int[]
             {}
         },
         { // 1
-            new int[]
-            {
-                1
-            },
+            1,
             new int[]
             {
                 1, 4, 9
             }
         },
         { // 2
-            new int[]
-            {
-                1, 2
-            },
+            3,
             new int[]
             {
                 2, 4, 9,
@@ -62,10 +55,7 @@ internal class MeshGenerator
             }
         },
         { // 3
-            new int[]
-            {
-                1, 3
-            },
+            5,
             new int[]
             {
                 1, 4, 9,
@@ -73,10 +63,7 @@ internal class MeshGenerator
             }
         },
         { // 4
-            new int[]
-            {
-                1, 7
-            },
+            65,
             new int[]
             {
                 1, 4, 9,
@@ -84,10 +71,7 @@ internal class MeshGenerator
             }
         },
         { // 5
-            new int[]
-            {
-                2, 5, 6
-            },
+            50,
             new int[]
             {
                 1, 2, 9,
@@ -96,10 +80,7 @@ internal class MeshGenerator
             }
         },
         { // 6
-            new int[]
-            {
-                1, 2, 7
-            },
+            67,
             new int[]
             {
                 2, 4, 9,
@@ -108,10 +89,7 @@ internal class MeshGenerator
             }
         },
         { // 7
-            new int[]
-            {
-                2, 4, 7
-            },
+            74,
             new int[]
             {
                 3, 4, 11,
@@ -120,10 +98,7 @@ internal class MeshGenerator
             }
         },
         { // 8
-            new int[]
-            {
-                1, 2, 5, 6
-            },
+            51,
             new int[]
             {
                 4, 6, 8,
@@ -131,10 +106,7 @@ internal class MeshGenerator
             }
         },
         { // 9
-            new int[]
-            {
-                1, 5, 6, 8
-            },
+            177,
             new int[]
             {
                 4, 7, 11,
@@ -144,10 +116,7 @@ internal class MeshGenerator
             }
         },
         { // 10
-            new int[]
-            {
-                1, 4, 6, 7
-            },
+            105,
             new int[]
             {
                 3, 9, 11,
@@ -157,10 +126,7 @@ internal class MeshGenerator
             }
         },
         { // 11
-            new int[]
-            {
-                1, 5, 6, 7
-            },
+            113,
             new int[]
             {
                 1, 4, 8,
@@ -170,10 +136,7 @@ internal class MeshGenerator
             }
         },
         { // 12
-            new int[]
-            {
-                2, 4, 5, 6
-            },
+            58,
             new int[]
             {
                 3, 4, 11,
@@ -183,10 +146,7 @@ internal class MeshGenerator
             }
         },
         { // 13
-            new int[]
-            {
-                1, 3, 6, 8
-            },
+            165,
             new int[]
             {
                 1, 4, 9,
@@ -196,10 +156,7 @@ internal class MeshGenerator
             }
         },
         { // 14
-            new int[]
-            {
-                2, 5, 6, 8
-            },
+            178,
             new int[]
             {
                 1, 11, 9,
@@ -223,12 +180,8 @@ internal class MeshGenerator
         
         if (chunk == null)
         {
-            Debug.LogError("_loadedChunks.Length = " + _loadedChunks.Count);
-            //Debug.LogError("Generate Mesh called on null chunk position");
             return null;
         }
-
-        Debug.Log("in GenerateMesh(), " + chunk.ToString());
 
         for (int x = 0; x < Chunk.ChunkSize.x - 1; x++)
         {
@@ -255,11 +208,33 @@ internal class MeshGenerator
                     }
                     if (numTrue != 0 && numTrue != 8)
                     {
-                        Debug.Log("Got a cube to check out: "+x+", "+y+", "+z);
-                        int[] triangles = getTriangles(cube);
-                        if (triangles != null)
+                        bool inverted = false;
+                        // Invert values if more than 4 voxels are on
+                        if (numTrue > 4)
                         {
-                            Debug.Log(triangles.ToString());
+                            inverted = true;
+                            for (int b = 0; b < cube.Length; b++)
+                            {
+                                cube[b] = !cube[b];
+                            }
+                        }
+
+                        int[] vertices = new int[numTrue];
+                        int vert_index = 0;
+                        for (int i = 0; i < cube.Length; i++)
+                        {
+                            if (cube[i])
+                            {
+                                vertices[vert_index] = i;
+                                vert_index++;
+                            }
+                        }
+
+                        int[] newTriangles = getTriangles(vertices);
+
+                        if (newTriangles != null)
+                        {
+                            addToMesh(mesh, x, y, z, newTriangles);
                         }
                     }
                 }
@@ -269,13 +244,30 @@ internal class MeshGenerator
         return mesh;
     }
 
-    private static void addToMesh(Mesh mesh, int x, int y, int z, int meshIndex)
+    private static void addToMesh(Mesh mesh, int x, int y, int z, int[] addTriangles)
     {
         Vector3[] vertices = mesh.vertices;
         //Vector2[] uv = mesh.uv;
         int[] triangles = mesh.triangles;
 
         // Transform and add new vertices
+        Vector3[] newVertices = new Vector3[vertices.Length + BaseVertices.Length];
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            newVertices[i] = vertices[i];
+        }
+        
+        //Rotate
+
+        //Translate
+        
+
+        for (int i = 0; i < BaseVertices.Length; i++)
+        {
+            newVertices[i + vertices.Length] = BaseVertices[i];
+        }
+
+        int[] newTriangles = new int[triangles.Length + addTriangles.Length];
 
         // Add triangles according to indexes of new vertices
         
@@ -286,45 +278,8 @@ internal class MeshGenerator
     }
 
     //TODO return rotation reference along with triangles, or rotated vertices
-    private static int[] getTriangles(bool[] cube)
+    private static int[] getTriangles(int[] matchVertices)
     {
-        bool matchTrue = true;
-        int numTrue = 0;
-        int[] matchVertices;
-        int matchVerticesInsertIndex;
-
-        Debug.Log("In getTriangles() " + cube.ToString());
-
-        // Count number of true elements. If more than 4, match inverse
-        foreach (bool b in cube)
-        {
-            if (b)
-            {
-                numTrue++;
-            }
-        }
-        
-        if (numTrue > 4)
-        {
-            matchTrue = false;
-            matchVertices = new int[8 - numTrue];
-        }
-        else
-        {
-            matchVertices = new int[numTrue];
-        }
-
-        // Populate array of vertex indices
-        matchVerticesInsertIndex = 0;
-        for (int i = 0; i < cube.Length; i++)
-        {
-            if(cube[i] == matchTrue)
-            {
-                matchVertices[matchVerticesInsertIndex] = i;
-                matchVerticesInsertIndex++;
-            }
-        }
-
         // Iterate through 14 templates * 24 possible rotations to find match
         int[] triangles = null;
         for (int rx = 0; rx < 4; rx++)
@@ -334,40 +289,50 @@ internal class MeshGenerator
                 // Iterate through 16 rotations in x-y rotations
                 for (int ry = 0; ry < 4; ry++)
                 {
-                    VerticesToTriangles.TryGetValue(matchVertices, out triangles);
+                    int matchHashKey = getHashKey(matchVertices);
+                    VerticesToTriangles.TryGetValue(matchHashKey, out triangles);
 
                     if (triangles != null)
                     {
                         return triangles;
                     }
 
-                    rotateVertices(matchVertices, 1, RotationIndex['y']);
+                    rotateVertices(matchVertices, 1, 'y');
                 }
 
                 // Iterate through remaining 8 rotations in x-z rotations 
                 for (int rz = 1; rz < 3; rz += 2)
                 {
-                    VerticesToTriangles.TryGetValue(matchVertices, out triangles);
+                    int matchHashKey = getHashKey(matchVertices);
+                    VerticesToTriangles.TryGetValue(matchHashKey, out triangles);
 
                     if (triangles != null)
                     {
                         return triangles;
                     }
 
-                    rotateVertices(matchVertices, rz, RotationIndex['z']);
+                    rotateVertices(matchVertices, rz, 'z');
                 }
-                rotateVertices(matchVertices, 1, RotationIndex['z']); // Rotate back to original position in z-axis
+                rotateVertices(matchVertices, 1, 'z'); // Rotate back to original position in z-axis
             }
-            rotateVertices(matchVertices, 1, RotationIndex['x']);
+            rotateVertices(matchVertices, 1, 'x');
         }
 
         // Should never fail
-        Debug.LogError("Failed to match vertices");
         return null;
     }
     
-    private static void rotateVertices(int[] vertices, int rotateTimes, int[][] rotationIndex)
+    private static void rotateVertices(int[] vertices, int rotateTimes, char rotateDimension)
     {
+        int[][] rotationIndex = null;
+        RotationIndex.TryGetValue(rotateDimension, out rotationIndex);
+
+        if (rotationIndex == null)
+        {
+            Debug.LogError("Invalid Rotate Dimension: must be x y or z");
+            return;
+        }
+
         for (int i = 0; i < vertices.Length; i++)
         {
             for (int r = 0; r < rotateTimes; r++)
@@ -386,5 +351,15 @@ internal class MeshGenerator
         }
 
         return;
+    }
+
+    private static int getHashKey(int[] vertices)
+    {
+        int key = 0;
+        foreach (int v in vertices)
+        {
+            key += 1 << v;
+        }
+        return key;
     }
 }

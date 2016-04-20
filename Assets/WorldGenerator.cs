@@ -14,7 +14,7 @@ public class WorldGenerator : MonoBehaviour
 	private GameObject _chunkPrefab;
 
 	[SerializeField]
-	private int _viewDistance = 6;
+	private int _viewDistance = 1;
 
 	private Dictionary<Vector3, Chunk> _loadedChunks;
 
@@ -27,17 +27,11 @@ public class WorldGenerator : MonoBehaviour
 		_player = ((GameObject)Instantiate(_playerPrefab, new Vector3(0, 110, 0), Quaternion.Euler(0, 0, 0))).transform;
 
 		StartCoroutine("LoadChunks");
-		StartCoroutine("UnloadChunks");
+		//StartCoroutine("UnloadChunks");
 	}
 
 	private IEnumerator LoadChunks()
 	{
-        Chunk chunk = GenerateChunk(0, 0, 0);
-        _loadedChunks.Add(new Vector3(0, 0, 0), chunk);
-        chunk.UpdateMesh();
-
-        yield return new WaitForSeconds(1);
-        /*
 		while(true)
 		{
 			int playerx = (int)Mathf.Floor(_player.position.x / Chunk.ChunkSize.x);
@@ -68,13 +62,11 @@ public class WorldGenerator : MonoBehaviour
 
 			yield return new WaitForSeconds(.01f);
 		}
-        */
+        
 	}
 
 	private IEnumerator UnloadChunks()
 	{
-        yield return new WaitForSeconds(1f);
-        /*
         while (true)
 		{
 			try
@@ -101,7 +93,7 @@ public class WorldGenerator : MonoBehaviour
 			}
 			yield return new WaitForSeconds(.1f);
 		}
-        */
+        
 	}
 
 	private Chunk GenerateChunk(int chunkX, int chunkY, int chunkZ)
