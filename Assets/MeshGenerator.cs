@@ -6,28 +6,35 @@ internal class MeshGenerator
 	private static Dictionary<Vector3, Chunk> _loadedChunks;
 	private static Mesh[] meshArray;
 
-	private static readonly Dictionary<char, int[][]> RotationIndex = new Dictionary<char, int[][]>
+	public static readonly Dictionary<char, int[][]> VertexRotationIndex = new Dictionary<char, int[][]>
 	{
 		{'x', new int[][] { new int[] { 0, 4, 7, 3 }, new int[] { 1, 5, 6, 2 } } },
 		{'y', new int[][] { new int[] { 0, 1, 5, 4 }, new int[] { 3, 2, 6, 7 } } },
 		{'z', new int[][] { new int[] { 0, 1, 2, 3 }, new int[] { 4, 5, 6, 7 } } }
 	};
 
-	// The midpoints on each edge of a cube used with Triangle indices to create mesh
-	private static readonly Vector3[] BaseVertices = {
-		new Vector3(0,      0,      0),
-		new Vector3(0.5f    ,0,     0),
-		new Vector3(1,      .5f,    0),
-		new Vector3(0.5f,   1,      0),
-		new Vector3(0,      0.5f,   0),
-		new Vector3(0.5f,    0,     1),
-		new Vector3(1,      0.5f,   1),
-		new Vector3(0.5f,   1,      1),
-		new Vector3(0,      0.5f,   1),
-		new Vector3(0,      0,      0.5f),
-		new Vector3(1,      0,      0.5f),
-		new Vector3(1,      1,      0.5f),
-		new Vector3(0,      1,      0.5f),
+    public static readonly Dictionary<char, int[][]> MidpointRotationIndex = new Dictionary<char, int[][]>
+    {
+        {'x', new int[][] { new int[] { 1, 5, 7, 3 }, new int[] { 2, 10, 6, 12 }, new int[] { 4, 9, 8, 11 } } },
+        {'y', new int[][] { new int[] { 1, 10, 5, 9 }, new int[] { 2, 6, 8, 4 }, new int[] { 3, 12, 7, 11 } } },
+        {'z', new int[][] { new int[] { 1, 2, 3, 4 }, new int[] { 5, 6, 7, 8 }, new int[] { 9, 10, 11, 12 } } }
+    };
+
+    // The midpoints on each edge of a cube used with Triangle indices to create mesh
+    private static readonly Vector3[] Midpoints = {
+		new Vector3(0,      0,      0),     // centre
+		new Vector3(0.5f    ,0,     0),     // 1
+		new Vector3(1,      .5f,    0),     // 2
+		new Vector3(0.5f,   1,      0),     // 3
+		new Vector3(0,      0.5f,   0),     // 4
+		new Vector3(0.5f,    0,     1),     // 5
+		new Vector3(1,      0.5f,   1),     // 6
+		new Vector3(0.5f,   1,      1),     // 7
+		new Vector3(0,      0.5f,   1),     // 8
+		new Vector3(0,      0,      0.5f),  // 9
+		new Vector3(1,      0,      0.5f),  // 10
+		new Vector3(0,      1,      0.5f),  // 11
+		new Vector3(1,      1,      0.5f),  // 12
 	};
 
 	// Dictionary of Active Voxels corresponding to Triangle Indices.
@@ -210,7 +217,7 @@ internal class MeshGenerator
 					}
 					if(numTrue != 0 && numTrue != 8)
 					{
-						bool inverted = false;
+                        bool inverted = false;
 						// Invert values if more than 4 voxels are on
 						if(numTrue > 4)
 						{
@@ -232,16 +239,29 @@ internal class MeshGenerator
 							}
 						}
 
-						if(getTriangles(vertices) != null)
+                        int[] triangles = getTriangles(vertices);
+						if(triangles != null)
 						{
-							foreach(int tri in getTriangles(vertices))
+                            // If inverted, switch the winding of each triangle by swapping the first two elements
+                            if (inverted)
+                            {
+                                Debug.Log("doing inverted stuff");
+                                for (int i = 0; i < triangles.Length - 1; i += 3)
+                                {
+                                    int temp = triangles[i];
+                                    triangles[i] = triangles[i + 1];
+                                    triangles[i + 1] = temp;
+                                }
+                            }
+
+							for (int tri = 0; tri < triangles.Length; tri++)
 							{
-								newTriangles.Add(tri + newVertices.Count);
+								newTriangles.Add(triangles[tri] + newVertices.Count);
 							}
 
-							foreach(Vector3 vertex in BaseVertices)
+							for(int m = 0; m < Midpoints.Length; m++)
 							{
-								newVertices.Add(vertex + new Vector3(x, y, z));
+								newVertices.Add(Midpoints[m] + new Vector3(x, y, z));
 							}
 						}
 						
@@ -257,90 +277,86 @@ internal class MeshGenerator
 
 		return mesh;
 	}
-
-	//TODO return rotation reference along with triangles, or rotated vertices
+    
 	private static int[] getTriangles(int[] matchVertices)
 	{
-		// Iterate through 14 templates * 24 possible rotations to find match
-		int[] triangles = null;
-		for(int rx = 0; rx < 4; rx++)
+        int[] triangles = null;
+
+        // Iterate through all possible rotations to find match
+        for (int rx = 0; rx < 4; rx++)
 		{
-			for(int templateIndex = 1; templateIndex < VerticesToTriangles.Count; templateIndex++)
+			for(int ry = 0; ry < 4; ry++)
 			{
-				// Iterate through 16 rotations in x-y rotations
-				for(int ry = 0; ry < 4; ry++)
+				int matchHashKey = getHashKey(matchVertices);
+				VerticesToTriangles.TryGetValue(matchHashKey, out triangles);
+
+				if(triangles != null)
 				{
-					int matchHashKey = getHashKey(matchVertices);
-					VerticesToTriangles.TryGetValue(matchHashKey, out triangles);
+                    //rotateOnIndex(triangles, -rx, MidpointRotationIndex['x']);
+                    //rotateOnIndex(triangles, -ry, MidpointRotationIndex['y']);
+                    return triangles;
+                }
 
-					if(triangles != null)
-					{
-						return triangles;
-					}
-
-					rotateVertices(matchVertices, 1, 'y');
-				}
-
-				// Iterate through remaining 8 rotations in x-z rotations
-				for(int rz = 1; rz < 3; rz += 2)
-				{
-					int matchHashKey = getHashKey(matchVertices);
-					VerticesToTriangles.TryGetValue(matchHashKey, out triangles);
-
-					if(triangles != null)
-					{
-						return triangles;
-					}
-
-					rotateVertices(matchVertices, rz, 'z');
-				}
-				rotateVertices(matchVertices, 1, 'z'); // Rotate back to original position in z-axis
+				rotateOnIndex(matchVertices, 1, VertexRotationIndex['y']);
 			}
-			rotateVertices(matchVertices, 1, 'x');
+                
+			for(int rz = 0; rz < 4; rz++)
+			{
+                int matchHashKey = getHashKey(matchVertices);
+				VerticesToTriangles.TryGetValue(matchHashKey, out triangles);
+
+				if(triangles != null)
+                {
+                    //rotateOnIndex(triangles, rx, MidpointRotationIndex['x']);
+                    //rotateOnIndex(triangles, rz, MidpointRotationIndex['z']);
+                    //return triangles;
+				}
+                rotateOnIndex(matchVertices, 1, VertexRotationIndex['z']);
+            }
+			
+			rotateOnIndex(matchVertices, 1, VertexRotationIndex['x']);
 		}
 
 		// Should never fail
-		Debug.Log("Return null set of triangles");
+		//Debug.Log("Return null set of triangles");
 		return null;
 	}
 
-	private static void rotateVertices(int[] vertices, int rotateTimes, char rotateDimension)
+	public static void rotateOnIndex(int[] toRotate, int rotateTimes, int[][] rotationIndex)
 	{
-		int[][] rotationIndex = null;
-		RotationIndex.TryGetValue(rotateDimension, out rotationIndex);
-
 		if(rotationIndex == null)
 		{
-			Debug.LogError("Invalid Rotate Dimension: must be x y or z");
+			Debug.LogError("Must Provide valid rotationIndex to RotateOnIndex method");
 			return;
 		}
+        if(rotateTimes == 0) // don't waste time if we're not rotating
+        {
+            return;
+        }
 
-		for(int i = 0; i < vertices.Length; i++)
+		for(int i = 0; i < toRotate.Length; i++)
 		{
-			for(int r = 0; r < rotateTimes; r++)
-			{
-				int indexOf = System.Array.IndexOf(rotationIndex[0], vertices[i]);
-				if(indexOf != -1)
-				{
-					vertices[i] = rotationIndex[0][(indexOf + 1) % rotationIndex[0].Length];
-				}
-				else
-				{
-					indexOf = System.Array.IndexOf(rotationIndex[1], vertices[i]);
-					vertices[i] = rotationIndex[1][(indexOf + 1) % rotationIndex[1].Length];
-				}
-			}
+            bool found = false;
+            for (int findIndex = 0; !found && findIndex < rotationIndex.Length; findIndex++)
+            {
+                int length = rotationIndex[findIndex].Length;
+                int indexOfVertex = System.Array.IndexOf(rotationIndex[findIndex], toRotate[i]);
+                if (indexOfVertex != -1)
+                {
+                    found = true;
+                    toRotate[i] = rotationIndex[findIndex][(indexOfVertex + rotateTimes + length) % length];
+                }
+            }
 		}
-
 		return;
 	}
 
 	private static int getHashKey(int[] vertices)
 	{
 		int key = 0;
-		foreach(int v in vertices)
+		for (int v = 0; v < vertices.Length; v++)
 		{
-			key += 1 << v;
+			key += 1 << vertices[v];
 		}
 		return key;
 	}
