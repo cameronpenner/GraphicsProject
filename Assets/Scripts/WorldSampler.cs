@@ -15,7 +15,7 @@ internal class WorldSampler
 
 		var height = PerlinSample(x, z);// = TerrainAmplitude * Mathf.PerlinNoise(NoiseScale * x + NoiseOffset, NoiseScale * z + NoiseOffset) + TerrainOffset;
 
-		if(y < height && y+1 > height)
+		if(y < height)// && y+1 > height)
 			voxel.on = true;
 
 		return voxel;
