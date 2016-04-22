@@ -19,17 +19,8 @@ public class WorldGenerator : MonoBehaviour
 	private Dictionary<Vector3, Chunk> _loadedChunks;
 
 	private void Start()
-	{/*
-        int[] test = new int[] { 1, 3, 5, 2, 4, 6 };
-        Debug.Log("original: " + test[0] + ", " + test[1] + ", " + test[2] + ", " + test[3] + ", " + test[4] + ", " + test[5]);
-        MeshGenerator.rotateOnIndex(test, 0, MeshGenerator.MidpointRotationIndex['x']);
-        Debug.Log("not modified: " + test[0] + ", " + test[1] + ", " + test[2] + ", " + test[3] + ", " + test[4] + ", " + test[5]);
-        MeshGenerator.rotateOnIndex(test, -1, MeshGenerator.MidpointRotationIndex['x']);
-        Debug.Log("modified: " + test[0] + ", " + test[1] + ", " + test[2] + ", " + test[3] + ", " + test[4] + ", " + test[5]);
-        */
-
-        
-		_sampler = new WorldSampler();
+	{
+        _sampler = new WorldSampler();
 		_loadedChunks = new Dictionary<Vector3, Chunk>();
 		MeshGenerator.SetChunkReference(_loadedChunks);
 
@@ -117,7 +108,7 @@ public class WorldGenerator : MonoBehaviour
 			{
 				for(int z = 0; z < Chunk.ChunkSize.z; z++)
 				{
-					var voxel = _sampler.SamplePosition((int)(chunkX * Chunk.ChunkSize.x + x), (int)(chunkY * Chunk.ChunkSize.y + y), (int)(chunkZ * Chunk.ChunkSize.z) + z);
+					Voxel voxel = _sampler.SamplePosition((int)(chunkX * Chunk.ChunkSize.x + x), (int)(chunkY * Chunk.ChunkSize.y + y), (int)(chunkZ * Chunk.ChunkSize.z) + z);
 
 					chunk.SetVoxel(voxel, x, y, z);
 				}

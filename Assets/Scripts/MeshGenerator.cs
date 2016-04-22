@@ -17,7 +17,7 @@ public class MeshGenerator
 	{
 		{'x', new int[][] { new int[] { 1, 5, 7, 3 }, new int[] { 2, 10, 6, 12 }, new int[] { 4, 9, 8, 11 } } },
 		{'y', new int[][] { new int[] { 1, 10, 5, 9 }, new int[] { 2, 6, 8, 4 }, new int[] { 3, 12, 7, 11 } } },
-		{'z', new int[][] { new int[] { 1, 2, 3, 4 }, new int[] { 5, 6, 7, 8 }, new int[] { 9, 10, 11, 12 } } }
+		{'z', new int[][] { new int[] { 1, 2, 3, 4 }, new int[] { 5, 6, 7, 8 }, new int[] { 9, 10, 12, 11 } } }
 	};
 
 	// The midpoints on each edge of a cube used with Triangle indices to create mesh
@@ -38,140 +38,112 @@ public class MeshGenerator
 	};
 
 	// Dictionary of Active Voxels corresponding to Triangle Indices.
-	private static readonly Dictionary<int, int[]> VerticesToTriangles = new Dictionary<int, int[]>
-	{
-		{ // 0
-            0,
-			new int[]
-			{}
-		},
-		{ // 1
-            1,
-			new int[]
-			{
-				1, 4, 9
-			}
-		},
-		{ // 2
-            3,
-			new int[]
-			{
-				2, 4, 9,
-				2, 9, 10
-			}
-		},
-		{ // 3 NONE GENERATED??? Test when more advancet terrain is implemented
-            5,
-			new int[]
-			{
-				1, 4, 9,
-				2, 3, 12
-			}
-		},
-		{ // 4 NONE GENERATED??? Test when more advancet terrain is implemented
-            65,
-			new int[]
-			{
-				1, 4, 9,
-				6, 7, 12
-			}
-		},
-		{ // 5
-            50,
-			new int[]
-			{
-				1, 9, 2,
-				2, 9, 8,
-				2, 8, 6
-			}
-		},
-		{ // 6 NONE GENERATED??? Test when more advancet terrain is implemented
-            67,
-			new int[]
-			{
-				2, 4, 9,
-				2, 9, 10,
-				6, 7, 12
-			}
-		},
-		{ // 7 NONE GENERATED??? Test when more advancet terrain is implemented
-            74,
-			new int[]
-			{
-				3, 4, 11,
-				1, 2, 10,
-				6, 7, 12
-			}
-		},
-		{ // 8
-            51,
-			new int[]
-			{
-				6, 4, 8,
-				2, 4, 6,
-			}
-		},
-		{ // 9 NONE GENERATED??? Test when more advancet terrain is implemented
-            177,
-			new int[]
-			{
-				4, 11, 7,
-				4, 7, 1,
-				6, 1, 7,
-				6, 10, 1,
-			}
-		},
-		{ // 10 NONE GENERATED??? Test when more advancet terrain is implemented
-            105,
-			new int[]
-			{
-				3, 9, 11,
-				3, 9, 1,
-				5, 7, 12,
-				5, 10, 12
-			}
-		},
-		{ // 11 NONE GENERATED??? Test when more advancet terrain is implemented
-            113,
-			new int[]
-			{
-				1, 4, 8,
-				1, 8, 12,
-				7, 12, 8,
-				1, 12, 10,
-			}
-		},
-		{ // 12
-            58,
-			new int[]
-			{
-				3, 4, 11,
-				1, 9, 2,
-				8, 2, 9,
-				8, 6, 2,
-			}
-		},
-		{ // 13 NONE GENERATED??? Test when more advancet terrain is implemented
-            165,
-			new int[]
-			{
-				1, 4, 9,
-				2, 3, 12,
-				5, 6, 10,
-				7, 8, 11,
-			}
-		},
-		{ // 14
-            178,
-			new int[]
-			{
-				1, 9, 11,
-				1, 11, 6,
-				1, 6, 2,
-				7, 6, 11,
-			}
-		}
-	};
+	private static int[] VerticesToTriangles(int hash)
+    {
+        switch (hash)
+        {
+            case (1): // 1
+                return new int[]
+                {
+                    1, 4, 9
+                };
+            case (3): // 2
+                return new int[]
+                {
+                    2, 4, 9,
+                    2, 9, 10
+                };
+            case (5): // 3
+                return new int[]
+                {
+                    1, 4, 9,
+                    2, 3, 12
+                };
+            case (65): // 4
+                return new int[]
+                {
+                    1, 4, 9,
+                    6, 7, 12
+                };
+            case (50): // 5
+                return new int[]
+                {
+                    1, 9, 2,
+                    2, 9, 8,
+                    2, 8, 6
+                };
+            case (67): // 6
+                return new int[]
+                {
+                    2, 4, 9,
+                    2, 9, 10,
+                    6, 7, 12
+                };
+            case (74): // 7
+                return new int[]
+                {
+                    3, 4, 11,
+                    1, 2, 10,
+                    6, 7, 12
+                };
+            case (51): // 8
+                return new int[]
+                {
+                    6, 4, 8,
+                    2, 4, 6
+                };
+            case (177): // 9
+                return new int[]
+                {
+                    4, 11, 7,
+                    4, 7, 1,
+                    6, 1, 7,
+                    6, 10, 1
+                };
+            case (105): // 10
+                return new int[]
+                {
+                    3, 9, 11,
+                    3, 9, 1,
+                    5, 7, 12,
+                    5, 10, 12
+                };
+            case (113): // 11
+                return new int[]
+                {
+                    1, 4, 8,
+                    1, 8, 12,
+                    7, 12, 8,
+                    1, 12, 10
+                };
+            case (58): // 12
+                return new int[]
+                {
+                    3, 4, 11,
+                    1, 9, 2,
+                    8, 2, 9,
+                    8, 6, 2
+                };
+            case (165): // 13
+                return new int[]
+                {
+                    1, 4, 9,
+                    2, 3, 12,
+                    5, 6, 10,
+                    7, 8, 11
+                };
+            case (178): // 14
+                return new int[]
+                {
+                    1, 9, 11,
+                    1, 11, 6,
+                    1, 6, 2,
+                    7, 6, 11
+                };
+        }
+
+        return null;
+    }
 
 	public static void SetChunkReference(Dictionary<Vector3, Chunk> loadedChunks)
 	{
@@ -210,67 +182,90 @@ public class MeshGenerator
 						chunk.VoxelAt(x, y+1, z+1),
 					};
 
-					int numTrue = 0;
-					foreach(bool b in cube)
-					{
-						if(b) numTrue++;
-					}
-					if(numTrue != 0 && numTrue != 8)
-					{
-						bool inverted = false;
-						// Invert values if more than 4 voxels are on
-						if(numTrue > 4)
-						{
-							inverted = true;
-							for(int b = 0; b < cube.Length; b++)
-							{
-								cube[b] = !cube[b];
-							}
-						}
-
-						int[] vertices = new int[numTrue];
-						int vert_index = 0;
-						for(int i = 0; i < cube.Length; i++)
-						{
-							if(cube[i])
-							{
-								vertices[vert_index] = i;
-								vert_index++;
-							}
-						}
-
-						int[] triangles = getTriangles(vertices);
-						if(triangles != null)
-						{
-							// If inverted, switch the winding of each triangle by swapping the first two elements
-							if(inverted)
-							{
-								Debug.Log("doing inverted stuff");
-								for(int i = 0; i < triangles.Length - 1; i += 3)
-								{
-									int temp = triangles[i];
-									triangles[i] = triangles[i + 1];
-									triangles[i + 1] = temp;
-								}
-							}
-
-							for(int tri = 0; tri < triangles.Length; tri++)
-							{
-								newTriangles.Add(triangles[tri] + newVertices.Count);
-							}
-
-							for(int m = 0; m < Midpoints.Length; m++)
-							{
-								newVertices.Add(Midpoints[m] + new Vector3(x, y, z));
-							}
-						}
-					}
+                    processCube(cube, newTriangles, newVertices, x, y, z);
 				}
 			}
 		}
 
-		//turn list to vertex array
-		mesh.vertices = newVertices.ToArray();
+        // Get all Neighbours
+        Chunk[] nbr = new Chunk[26];
+        int nIndex = 0;
+        for (int x = -1; x < 2; x++)
+        {
+            for (int y = -1; y < 2; y++)
+            {
+                for (int z = -1; z < 2; z++)
+                {
+                    if (x != 1 || y != 1 || z != 1)
+                    {
+                        _loadedChunks.TryGetValue(new Vector3(chunkPosition.x + x, chunkPosition.y + y, chunkPosition.z + z), out nbr[nIndex]);
+                        nIndex++;
+                    }
+                }
+            }
+        }
+
+        // Faces
+        // x positive
+        //chunkFaceX(newTriangles, newVertices, new Chunk[] { chunk, nbr[21] }, (int)Chunk.ChunkSize.x - 1);
+
+        // x negative
+        chunkFaceX(newTriangles, newVertices, new Chunk[] { nbr[4], chunk }, -1);
+
+        // y positive
+        //chunkFaceY(newTriangles, newVertices, new Chunk[] { chunk, nbr[15] }, (int)Chunk.ChunkSize.y - 1);
+
+        // y negative
+        chunkFaceY(newTriangles, newVertices, new Chunk[] { nbr[10], chunk }, -1);
+
+        // z positive
+        //chunkFaceZ(newTriangles, newVertices, new Chunk[] { chunk, nbr[13] }, (int)Chunk.ChunkSize.z - 1);
+
+        // z negative
+        chunkFaceZ(newTriangles, newVertices, new Chunk[] { nbr[12], chunk }, -1);
+        
+        // Edges
+        // x = 0, z = 0
+        chunkEdgeXZ(newTriangles, newVertices, new Chunk[] { nbr[3], nbr[12], nbr[4], chunk }, -1, -1);
+
+        // x = max, z = 0
+        chunkEdgeXZ(newTriangles, newVertices, new Chunk[] { nbr[12], nbr[20], chunk, nbr[21] }, (int)Chunk.ChunkSize.x - 1, -1);
+
+        // x = max, z = max
+        chunkEdgeXZ(newTriangles, newVertices, new Chunk[] { chunk, nbr[21], nbr[13], nbr[22] }, (int)Chunk.ChunkSize.x - 1, (int)Chunk.ChunkSize.z - 1);
+
+        // x = 0, z = max
+        chunkEdgeXZ(newTriangles, newVertices, new Chunk[] { nbr[4], chunk, nbr[5], nbr[13] }, -1, (int)Chunk.ChunkSize.z - 1);
+
+        // x = 0, y = 0
+        chunkEdgeXY(newTriangles, newVertices, new Chunk[] { nbr[1], nbr[10], chunk, nbr[4] }, -1, -1);
+
+        // x = max, y = 0
+        chunkEdgeXY(newTriangles, newVertices, new Chunk[] { nbr[10], nbr[18], nbr[21], chunk }, (int)Chunk.ChunkSize.x - 1, -1);
+
+        // x = max, y = max
+        chunkEdgeXY(newTriangles, newVertices, new Chunk[] { chunk, nbr[21], nbr[24], nbr[15] }, (int)Chunk.ChunkSize.x - 1, (int)Chunk.ChunkSize.z - 1);
+
+        // x = 0, y = max
+        chunkEdgeXY(newTriangles, newVertices, new Chunk[] { nbr[4], chunk, nbr[15], nbr[7] }, -1, (int)Chunk.ChunkSize.z - 1);
+
+        // y = 0, z = 0
+        chunkEdgeYZ(newTriangles, newVertices, new Chunk[] { nbr[9], nbr[12], nbr[10], chunk }, -1, -1);
+
+        // y = max, z = 0
+        chunkEdgeYZ(newTriangles, newVertices, new Chunk[] { nbr[12], nbr[14], chunk, nbr[15] }, (int)Chunk.ChunkSize.y - 1, -1);
+
+        // y = max, z = max
+        chunkEdgeYZ(newTriangles, newVertices, new Chunk[] { chunk, nbr[15], nbr[13], nbr[16] }, (int)Chunk.ChunkSize.y - 1, (int)Chunk.ChunkSize.z - 1);
+
+        // y = 0, z = max
+        chunkEdgeYZ(newTriangles, newVertices, new Chunk[] { nbr[10], chunk, nbr[11], nbr[13] }, -1, (int)Chunk.ChunkSize.z - 1);
+
+
+        // TODO Corners
+
+        //turn list to vertex array
+        mesh.vertices = newVertices.ToArray();
 		//turn list into triangle array
 		mesh.triangles = newTriangles.ToArray();
 
@@ -287,35 +282,33 @@ public class MeshGenerator
 			for(int ry = 0; ry < 4; ry++)
 			{
 				int matchHashKey = getHashKey(matchVertices);
-				VerticesToTriangles.TryGetValue(matchHashKey, out triangles);
+                triangles = VerticesToTriangles(matchHashKey);
 
-				if(triangles != null)
+                if (triangles != null)
 				{
-					int[] vertices;
-					vertices = rotateOnIndex(triangles, -ry, MidpointRotationIndex['y']);
-					vertices = rotateOnIndex(vertices, -rx, MidpointRotationIndex['x']);
-					return vertices;
+					triangles = rotateOnIndex(triangles, -ry, MidpointRotationIndex['y']);
+                    triangles = rotateOnIndex(triangles, -rx, MidpointRotationIndex['x']);
+					return triangles;
 				}
 
-				matchVertices = rotateOnIndex(matchVertices, 1, VertexRotationIndex['y']);
+                matchVertices = rotateOnIndex(matchVertices, 1, VertexRotationIndex['y']);
 			}
 
 			for(int rz = 0; rz < 4; rz++)
 			{
 				int matchHashKey = getHashKey(matchVertices);
-				VerticesToTriangles.TryGetValue(matchHashKey, out triangles);
+				triangles = VerticesToTriangles(matchHashKey);
 
 				if(triangles != null)
 				{
-					int[] vertices;
-					vertices = rotateOnIndex(triangles, -rz, MidpointRotationIndex['z']);
-					vertices = rotateOnIndex(vertices, -rx, MidpointRotationIndex['x']);
-					return vertices;
+                    triangles = rotateOnIndex(triangles, -rz, MidpointRotationIndex['z']);
+                    triangles = rotateOnIndex(triangles, -rx, MidpointRotationIndex['x']);
+					return triangles;
 				}
-				matchVertices = rotateOnIndex(matchVertices, 1, VertexRotationIndex['z']);
+                matchVertices = rotateOnIndex(matchVertices, 1, VertexRotationIndex['z']);
 			}
 
-			matchVertices = rotateOnIndex(matchVertices, 1, VertexRotationIndex['x']);
+            matchVertices = rotateOnIndex(matchVertices, 1, VertexRotationIndex['x']);
 		}
 
 		// Should never fail
@@ -335,7 +328,7 @@ public class MeshGenerator
 			return toRotate;
 		}
 
-		int[] newArray = (int[])toRotate.Clone();
+        int[] newArray = (int[])toRotate.Clone();
 
 		for(int i = 0; i < newArray.Length; i++)
 		{
@@ -347,11 +340,15 @@ public class MeshGenerator
 				if(indexOfVertex != -1)
 				{
 					found = true;
-					newArray[i] = rotationIndex[findIndex][(indexOfVertex + rotateTimes + length) % length];
+                    newArray[i] = rotationIndex[findIndex][(indexOfVertex + rotateTimes + length) % length];
 				}
 			}
+            if (!found)
+            {
+                Debug.LogError("Could not rotate!");
+            }
 		}
-		return newArray;
+        return newArray;
 	}
 
 	private static int getHashKey(int[] vertices)
@@ -363,4 +360,235 @@ public class MeshGenerator
 		}
 		return key;
 	}
+
+    private static void processCube(bool[] cube, List<int> newTriangles, List<Vector3> newVertices, int x, int y, int z)
+    {
+        int numTrue = 0;
+        foreach (bool b in cube)
+        {
+            if (b) numTrue++;
+        }
+        if (numTrue != 0 && numTrue != 8)
+        {
+            bool inverted = false;
+            int[] vertices = null;
+
+            // Invert values if more than 4 voxels are on
+            if (numTrue > 4)
+            {
+                inverted = true;
+                vertices = new int[8 - numTrue];
+            }
+            else
+            {
+                vertices = new int[numTrue];
+            }
+
+            int vert_index = 0;
+            for (int i = 0; i < cube.Length; i++)
+            {
+                if (cube[i] != inverted)
+                {
+                    vertices[vert_index] = i;
+                    vert_index++;
+                }
+            }
+
+            int[] triangles = getTriangles(vertices);
+            if (triangles != null)
+            {
+                // If inverted, switch the winding of each triangle by swapping the first two elements
+                if (inverted)
+                {
+                    for (int i = 0; i < triangles.Length - 1; i += 3)
+                    {
+                        int temp = triangles[i];
+                        triangles[i] = triangles[i + 1];
+                        triangles[i + 1] = temp;
+                    }
+                }
+
+                for (int tri = 0; tri < triangles.Length; tri++)
+                {
+                    newTriangles.Add(triangles[tri] + newVertices.Count);
+                }
+
+                for (int m = 0; m < Midpoints.Length; m++)
+                {
+                    newVertices.Add(Midpoints[m] + new Vector3(x, y, z));
+                }
+            }
+        }
+    }
+
+    private static void chunkFaceX(List<int> newTriangles, List<Vector3> newVertices, Chunk[] chunks, int x)
+    {
+        if (hasNullChunks(chunks))
+        {
+            return;
+        }
+
+        for (int y = 0; y < Chunk.ChunkSize.y - 1; y++)
+        {
+            for (int z = 0; z < Chunk.ChunkSize.z - 1; z++)
+            {
+                bool[] cube =
+                {
+                        chunks[0].VoxelAt((int)Chunk.ChunkSize.x - 1, y, z),
+                        chunks[1].VoxelAt(0, y, z),
+                        chunks[1].VoxelAt(0, y+1, z),
+                        chunks[0].VoxelAt((int)Chunk.ChunkSize.x - 1, y+1, z),
+                        chunks[0].VoxelAt((int)Chunk.ChunkSize.x - 1, y, z + 1),
+                        chunks[1].VoxelAt(0, y, z + 1),
+                        chunks[1].VoxelAt(0, y+1, z + 1),
+                        chunks[0].VoxelAt((int)Chunk.ChunkSize.x - 1, y+1, z + 1),
+                    };
+
+                processCube(cube, newTriangles, newVertices, x, y, z);
+            }
+        }
+    }
+
+    private static void chunkFaceY(List<int> newTriangles, List<Vector3> newVertices, Chunk[] chunks, int y)
+    {
+        if (hasNullChunks(chunks))
+        {
+            return;
+        }
+
+        for (int x = 0; x < Chunk.ChunkSize.x - 1; x++)
+        {
+            for (int z = 0; z < Chunk.ChunkSize.z - 1; z++)
+            {
+                bool[] cube =
+                {
+                        chunks[0].VoxelAt(x, (int)Chunk.ChunkSize.y - 1, z),
+                        chunks[0].VoxelAt(x + 1, (int)Chunk.ChunkSize.y - 1, z),
+                        chunks[1].VoxelAt(x + 1, 0, z),
+                        chunks[1].VoxelAt(x, 0, z),
+                        chunks[0].VoxelAt(x, (int)Chunk.ChunkSize.y - 1, z + 1),
+                        chunks[0].VoxelAt(x + 1, (int)Chunk.ChunkSize.y - 1, z + 1),
+                        chunks[1].VoxelAt(x + 1, 0, z + 1),
+                        chunks[1].VoxelAt(x, 0, z + 1),
+                    };
+
+                processCube(cube, newTriangles, newVertices, x, y, z);
+            }
+        }
+    }
+
+    private static void chunkFaceZ(List<int> newTriangles, List<Vector3> newVertices, Chunk[] chunks, int z)
+    {
+        if (hasNullChunks(chunks))
+        {
+            return;
+        }
+
+        for (int x = 0; x < Chunk.ChunkSize.x - 1; x++)
+        {
+            for (int y = 0; y < Chunk.ChunkSize.y - 1; y++)
+            {
+                bool[] cube =
+                {
+                        chunks[0].VoxelAt(x, y, (int)Chunk.ChunkSize.z - 1),
+                        chunks[0].VoxelAt(x+1, y, (int)Chunk.ChunkSize.z - 1),
+                        chunks[0].VoxelAt(x+1, y+1, (int)Chunk.ChunkSize.z - 1),
+                        chunks[0].VoxelAt(x, y+1, (int)Chunk.ChunkSize.z - 1),
+                        chunks[1].VoxelAt(x, y, 0),
+                        chunks[1].VoxelAt(x+1, y, 0),
+                        chunks[1].VoxelAt(x+1, y+1, 0),
+                        chunks[1].VoxelAt(x, y+1, 0),
+                    };
+
+                processCube(cube, newTriangles, newVertices, x, y, z);
+            }
+        }
+    }
+
+    private static void chunkEdgeXZ(List<int> newTriangles, List<Vector3> newVertices, Chunk[] chunks, int x, int z)
+    {
+        if (hasNullChunks(chunks))
+        {
+            return;
+        }
+
+        for (int y = 0; y < Chunk.ChunkSize.y - 1; y++)
+        {
+            bool[] cube =
+            {
+                chunks[0].VoxelAt((int)Chunk.ChunkSize.x - 1,       y,          (int)Chunk.ChunkSize.z - 1),
+                chunks[1].VoxelAt(0,                                y,          (int)Chunk.ChunkSize.z - 1),
+                chunks[1].VoxelAt(0,                                y + 1,      (int)Chunk.ChunkSize.z - 1),
+                chunks[0].VoxelAt((int)Chunk.ChunkSize.x - 1,       y + 1,      (int)Chunk.ChunkSize.z - 1),
+                chunks[2].VoxelAt((int)Chunk.ChunkSize.x - 1,       y,          0),
+                chunks[3].VoxelAt(0,                                y,          0),
+                chunks[3].VoxelAt(0,                                y + 1,      0),
+                chunks[2].VoxelAt((int)Chunk.ChunkSize.x - 1,       y + 1,      0),
+            };
+
+            processCube(cube, newTriangles, newVertices, x, y, z);
+        }
+    }
+
+    private static void chunkEdgeXY(List<int> newTriangles, List<Vector3> newVertices, Chunk[] chunks, int x, int y)
+    {
+        if (hasNullChunks(chunks))
+        {
+            return;
+        }
+
+        for (int z = 0; z < Chunk.ChunkSize.z - 1; z++)
+        {
+            bool[] cube =
+            {
+                chunks[0].VoxelAt((int)Chunk.ChunkSize.x - 1,       (int)Chunk.ChunkSize.y - 1,          z),
+                chunks[1].VoxelAt(0,                                (int)Chunk.ChunkSize.y - 1,          z),
+                chunks[2].VoxelAt(0,                                0,                                   z),
+                chunks[3].VoxelAt((int)Chunk.ChunkSize.x - 1,       0,                                   z),
+                chunks[0].VoxelAt((int)Chunk.ChunkSize.x - 1,       (int)Chunk.ChunkSize.y - 1,          z + 1),
+                chunks[1].VoxelAt(0,                                (int)Chunk.ChunkSize.y - 1,          z + 1),
+                chunks[2].VoxelAt(0,                                0,                                   z + 1),
+                chunks[3].VoxelAt((int)Chunk.ChunkSize.x - 1,       0,                                   z + 1),
+            };
+
+            processCube(cube, newTriangles, newVertices, x, y, z);
+        }
+    }
+
+    private static void chunkEdgeYZ(List<int> newTriangles, List<Vector3> newVertices, Chunk[] chunks, int y, int z)
+    {
+        if (hasNullChunks(chunks))
+        {
+            return;
+        }
+
+        for (int x = 0; x < Chunk.ChunkSize.x - 1; x++)
+        {
+            bool[] cube =
+            {
+                chunks[0].VoxelAt(x,        (int)Chunk.ChunkSize.y - 1,          (int)Chunk.ChunkSize.z - 1),
+                chunks[0].VoxelAt(x + 1,    (int)Chunk.ChunkSize.y - 1,          (int)Chunk.ChunkSize.z - 1),
+                chunks[1].VoxelAt(x + 1,    0,                                   (int)Chunk.ChunkSize.z - 1),
+                chunks[1].VoxelAt(x,        0,                                   (int)Chunk.ChunkSize.z - 1),
+                chunks[2].VoxelAt(x,        (int)Chunk.ChunkSize.y - 1,          0),
+                chunks[2].VoxelAt(x + 1,    (int)Chunk.ChunkSize.y - 1,          0),
+                chunks[3].VoxelAt(x + 1,    0,                                   0),
+                chunks[3].VoxelAt(x,        0,                                   0),
+            };
+
+            processCube(cube, newTriangles, newVertices, x, y, z);
+        }
+    }
+
+    private static bool hasNullChunks(Chunk[] chunks)
+    {
+        foreach (Chunk chunk in chunks)
+        {
+            if (chunk == null)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

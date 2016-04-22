@@ -26,19 +26,8 @@ public class Chunk : MonoBehaviour
 	}
 
 	public void SetVoxel(Voxel voxel, int x, int y, int z)
-	{/*
-        for (int iy = (int)ChunkSize.y - 1; iy >= y; iy--)
-        {
-            _blocks[x, iy, z] = voxel;
-        }*/
+	{
         _blocks[x, y, z] = voxel;
-
-		if(voxel.on)
-		{
-			var chunkPos = new Vector3(_chunkPosition.x * ChunkSize.x,
-                _chunkPosition.y * ChunkSize.y,
-                _chunkPosition.z * ChunkSize.z);
-		}
 	}
 
 	public void UpdateMesh()
