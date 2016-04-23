@@ -27,7 +27,7 @@ public class Chunk : MonoBehaviour
 
 	public void SetVoxel(Voxel voxel, int x, int y, int z)
 	{
-        _blocks[x, y, z] = voxel;
+		_blocks[x, y, z] = voxel;
 	}
 
 	public void UpdateMesh()
@@ -50,9 +50,9 @@ public class Chunk : MonoBehaviour
 			transform.GetChild(i).;*/
 	}
 
-    public bool VoxelValueAt(int x, int y, int z)
-    {
-        return _blocks[x, y, z].on;
+	public bool VoxelValueAt(int x, int y, int z)
+	{
+		return _blocks[x, y, z].on;
 	}
 
 	public Voxel VoxelAt(int x, int y, int z)

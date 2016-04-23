@@ -356,7 +356,7 @@ public class MeshGenerator
 			}
 		}
 	}
-	
+
 	private static bool hasNullChunks(Chunk[] chunks)
 	{
 		foreach(Chunk chunk in chunks)
