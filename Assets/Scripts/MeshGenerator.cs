@@ -346,12 +346,8 @@ public class MeshGenerator
 
 				for(int tri = 0; tri < triangles.Length; tri++)
 				{
-					newTriangles.Add(triangles[tri] + newVertices.Count);
-				}
-
-				for(int m = 0; m < Midpoints.Length; m++)
-				{
-					newVertices.Add(Midpoints[m] + new Vector3(x, y, z));
+					newTriangles.Add(newVertices.Count);
+					newVertices.Add(Midpoints[triangles[tri]] + new Vector3(x, y, z));
 				}
 			}
 		}
