@@ -23,6 +23,7 @@ public class WorldGenerator : MonoBehaviour
         _sampler = new WorldSampler();
 		_loadedChunks = new Dictionary<Vector3, Chunk>();
 		MeshGenerator.SetChunkReference(_loadedChunks);
+		VoxelSelector.SetLoadedChunks(_loadedChunks);
 
 		_player = ((GameObject)Instantiate(_playerPrefab, new Vector3(0, 110, 0), Quaternion.Euler(0, 0, 0))).transform;
 
@@ -52,15 +53,46 @@ public class WorldGenerator : MonoBehaviour
 						{
 							Chunk chunk = GenerateChunk(x, y, z);
 							_loadedChunks.Add(new Vector3(x, y, z), chunk);
-                            chunk.UpdateMesh();
+                            //chunk.UpdateMesh();
 
-                            yield return new WaitForSeconds(.01f);
+							/*for(int chunkx = x-1; chunkx <= x + 1; chunkx++)
+							{
+								for(int chunky = y - 1; chunkx <= y + 1; chunky++)
+								{
+									for(int chunkz = z - 1; chunkz <= z + 1; chunkz++)
+									{
+										Chunk neigbour;
+										if(_loadedChunks.TryGetValue(new Vector3(chunkx,chunky,chunkz), out neigbour))
+										{
+											neigbour.UpdateMesh();
+										}
+									}
+								}
+							}*/
+
+                            yield return new WaitForSeconds(.05f);
 						}
 					}
 				}
 			}
 
-			yield return new WaitForSeconds(.01f);
+			for(int x = startx; x <= endx; x++)
+			{
+				for(int z = startz; z <= endz; z++)
+				{
+					for(int y = 0; y < 4; y++)
+					{
+						Chunk chunk;
+						if(_loadedChunks.TryGetValue(new Vector3(x, y, z), out chunk))
+						{
+							chunk.UpdateMesh();
+							yield return new WaitForSeconds(.05f);
+						}
+					}
+				}
+			}
+
+			yield return new WaitForSeconds(.05f);
 		}
         
 	}

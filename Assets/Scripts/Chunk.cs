@@ -50,8 +50,18 @@ public class Chunk : MonoBehaviour
 			transform.GetChild(i).;*/
 	}
 
-    public bool VoxelAt(int x, int y, int z)
+    public bool VoxelValueAt(int x, int y, int z)
     {
         return _blocks[x, y, z].on;
-    }
+	}
+
+	public Voxel VoxelAt(int x, int y, int z)
+	{
+		return _blocks[x, y, z];
+	}
+
+	public Voxel VoxelAt(Vector3 coord)
+	{
+		return _blocks[(int)coord.x, (int)coord.y, (int)coord.z];
+	}
 }
