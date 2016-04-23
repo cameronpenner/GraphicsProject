@@ -12,7 +12,7 @@ public class WorldGenerator : MonoBehaviour
 
 	[SerializeField]
 	private GameObject _chunkPrefab;
-	
+
 	public int ViewDistance = 1;
 
 	private Dictionary<Vector3, Chunk> _loadedChunks;
@@ -133,12 +133,22 @@ public class WorldGenerator : MonoBehaviour
 
 		for(int x = 0; x < Chunk.ChunkSize.x; x++)
 		{
-			for(int y = 0; y < Chunk.ChunkSize.y; y++)
+			for(int z = 0; z < Chunk.ChunkSize.z; z++)
 			{
-				for(int z = 0; z < Chunk.ChunkSize.z; z++)
-				{
-					Voxel voxel = _sampler.SamplePosition((int)(chunkX * Chunk.ChunkSize.x + x), (int)(chunkY * Chunk.ChunkSize.y + y), (int)(chunkZ * Chunk.ChunkSize.z) + z);
+				int groundHeight = (int)_sampler.GroundHeight(x + chunkX * (int)Chunk.ChunkSize.x, z+chunkZ * (int)Chunk.ChunkSize.z );
+				groundHeight -= (int)Chunk.ChunkSize.y * chunkY;
 
+				for(int y = 0; y < groundHeight && y < Chunk.ChunkSize.y; y ++)
+				{
+					Voxel voxel = new Voxel();
+					voxel.on = true;
+					chunk.SetVoxel(voxel, x, y, z);
+				}
+
+				for(int y = Mathf.Max(0, groundHeight); y < Chunk.ChunkSize.y; y++)
+				{
+					Voxel voxel = new Voxel();
+					voxel.on = false;
 					chunk.SetVoxel(voxel, x, y, z);
 				}
 			}

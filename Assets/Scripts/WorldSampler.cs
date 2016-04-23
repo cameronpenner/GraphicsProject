@@ -1,31 +1,54 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-internal class WorldSampler
+public class WorldSampler
 {
-	private float TerrainAmplitude = 10;
-	private float TerrainOffset = 4;
-	private float NoiseScale = 0.04f;
+	private List<Biome> _biomes;
 
-	private float NoiseOffset = 1000;
+	public WorldSampler()
+	{
+		_biomes = new List<Biome>();
+		_biomes.Add(new MountainBiome());
+		_biomes.Add(new PlainsBiome());
+	}
 
 	public Voxel SamplePosition(int x, int y, int z)
 	{
 		Voxel voxel = new Voxel();
 		voxel.on = false;
 
-		var height = PerlinSample(x, z);// = TerrainAmplitude * Mathf.PerlinNoise(NoiseScale * x + NoiseOffset, NoiseScale * z + NoiseOffset) + TerrainOffset;
+		float max = 0;
+		Biome main = null;
 
-		if(y < height)// && y+1 > height)
-			voxel.on = true;
+		foreach(Biome biome in _biomes)
+		{
+			float bias = biome.Bias(x, z);
+			//Debug.Log("biome bias: " + bias+", "+biome);
+			if(bias > max)
+			{
+				max = bias;
+				main = biome;
+			}
+		}
 
-		return voxel;
+		return main.SamplePosition(x, y, z);
 	}
 
-	private float PerlinSample(float x, float z)
+	public float GroundHeight(int x, int z)
 	{
-		var height = (TerrainAmplitude / 3) * Mathf.PerlinNoise(NoiseScale * x + NoiseOffset, NoiseScale * z + NoiseOffset);
-		height += TerrainAmplitude * 4 * Mathf.PerlinNoise((NoiseScale / 10) * x + NoiseOffset, (NoiseScale / 10) * z + NoiseOffset);
-		//height += TerrainOffset;
-		return height;
+		float max = 0;
+		Biome main = null;
+
+		foreach(Biome biome in _biomes)
+		{
+			float bias = biome.Bias(x, z);
+			if(bias > max)
+			{
+				max = bias;
+				main = biome;
+			}
+		}
+
+		return main.GroundHeight(x, z);
 	}
 }
