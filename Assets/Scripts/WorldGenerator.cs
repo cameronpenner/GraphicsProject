@@ -69,7 +69,7 @@ public class WorldGenerator : MonoBehaviour
 								}
 							}*/
 
-							yield return new WaitForSeconds(.05f);
+							yield return new WaitForSeconds(.001f);
 						}
 					}
 				}
@@ -85,7 +85,7 @@ public class WorldGenerator : MonoBehaviour
 						if(_loadedChunks.TryGetValue(new Vector3(x, y, z), out chunk))
 						{
 							chunk.UpdateMesh();
-							yield return new WaitForSeconds(.05f);
+							yield return new WaitForSeconds(.001f);
 						}
 					}
 				}

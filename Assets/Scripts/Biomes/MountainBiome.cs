@@ -2,11 +2,11 @@
 
 public class MountainBiome : Biome
 {
-	private float TerrainAmplitude = 20;
+	private float TerrainAmplitude = 100;
 	private float TerrainOffset = 4;
-	private float NoiseScale = 0.04f;
+	private float NoiseScale = 0.02f;
 
-	private float NoiseOffset = 100456;
+	private float NoiseOffset = 100;
 
 	public Voxel SamplePosition(int x, int y, int z)
 	{
@@ -33,13 +33,13 @@ public class MountainBiome : Biome
 
 	private float PerlinSample(float x, float z)
 	{
-		var height = TerrainAmplitude * 4 * Mathf.PerlinNoise((NoiseScale / 10) * x + NoiseOffset, (NoiseScale / 10) * z + NoiseOffset);
+		var height = TerrainAmplitude * Mathf.PerlinNoise((NoiseScale) * x + NoiseOffset, (NoiseScale) * z + NoiseOffset);
 
 		return height;
 	}
 
 	public float Bias(int x, int z)
 	{
-		return Mathf.PerlinNoise(x / 10 + NoiseOffset * 2, z / 10 + NoiseOffset * 2);
+		return Mathf.PerlinNoise(x / 100f + .6234852f, z / 100f + .1237692f);
 	}
 }

@@ -33,13 +33,12 @@ public class PlainsBiome : Biome
 
 	private float PerlinSample(float x, float z)
 	{
-		var height = TerrainAmplitude * 4 * Mathf.PerlinNoise((NoiseScale / 10) * x + NoiseOffset, (NoiseScale / 10) * z + NoiseOffset);
-		height = 4;
+		var height = TerrainAmplitude * Mathf.PerlinNoise((NoiseScale / 10) * x + NoiseOffset, (NoiseScale / 10) * z + NoiseOffset);
 		return height;
 	}
 
 	public float Bias(int x, int z)
 	{
-		return Mathf.PerlinNoise(x / 10 + NoiseOffset * 2, z / 10 + NoiseOffset * 2);
+		return Mathf.PerlinNoise(x / 100f + .8327094f, z / 100f + .1926389f);
 	}
 }

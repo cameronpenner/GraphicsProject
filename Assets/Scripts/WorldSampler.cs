@@ -42,6 +42,7 @@ public class WorldSampler
 		foreach(Biome biome in _biomes)
 		{
 			float bias = biome.Bias(x, z);
+			//Debug.Log("biome bias: " + bias + ", " + biome);
 			if(bias > max)
 			{
 				max = bias;
