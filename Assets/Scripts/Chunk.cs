@@ -28,14 +28,6 @@ public class Chunk : MonoBehaviour
 	public void SetVoxel(Voxel voxel, int x, int y, int z)
 	{
 		_blocks[x, y, z] = voxel;
-
-		if(voxel.on)
-		{
-			var chunkPos = new Vector3(_chunkPosition.x * ChunkSize.x, _chunkPosition.y * ChunkSize.y, _chunkPosition.z * ChunkSize.z);
-			//remove this once mesh generation is in
-			GameObject block = (GameObject)Instantiate(_block, chunkPos + new Vector3(x, y, z), Quaternion.Euler(0, 0, 0));
-			block.transform.SetParent(transform);
-		}
 	}
 
 	public void UpdateMesh()
@@ -56,5 +48,20 @@ public class Chunk : MonoBehaviour
 		/*int children = transform.childCount;
 		for(int i = 0; i < children; i++)
 			transform.GetChild(i).;*/
+	}
+
+	public bool VoxelValueAt(int x, int y, int z)
+	{
+		return _blocks[x, y, z].on;
+	}
+
+	public Voxel VoxelAt(int x, int y, int z)
+	{
+		return _blocks[x, y, z];
+	}
+
+	public Voxel VoxelAt(Vector3 coord)
+	{
+		return _blocks[(int)coord.x, (int)coord.y, (int)coord.z];
 	}
 }

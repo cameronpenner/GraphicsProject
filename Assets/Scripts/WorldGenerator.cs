@@ -12,9 +12,8 @@ public class WorldGenerator : MonoBehaviour
 
 	[SerializeField]
 	private GameObject _chunkPrefab;
-
-	[SerializeField]
-	private int _viewDistance = 6;
+	
+	public int ViewDistance = 1;
 
 	private Dictionary<Vector3, Chunk> _loadedChunks;
 
@@ -23,11 +22,12 @@ public class WorldGenerator : MonoBehaviour
 		_sampler = new WorldSampler();
 		_loadedChunks = new Dictionary<Vector3, Chunk>();
 		MeshGenerator.SetChunkReference(_loadedChunks);
+		VoxelSelector.SetLoadedChunks(_loadedChunks);
 
 		_player = ((GameObject)Instantiate(_playerPrefab, new Vector3(0, 110, 0), Quaternion.Euler(0, 0, 0))).transform;
 
 		StartCoroutine("LoadChunks");
-		StartCoroutine("UnloadChunks");
+		//StartCoroutine("UnloadChunks");
 	}
 
 	private IEnumerator LoadChunks()
@@ -37,10 +37,10 @@ public class WorldGenerator : MonoBehaviour
 			int playerx = (int)Mathf.Floor(_player.position.x / Chunk.ChunkSize.x);
 			int playerz = (int)Mathf.Floor(_player.position.z / Chunk.ChunkSize.z);
 
-			int startx = playerx - _viewDistance / 2;
-			int startz = playerz - _viewDistance / 2;
-			int endx = playerx + _viewDistance / 2;
-			int endz = playerz + _viewDistance / 2;
+			int startx = playerx - ViewDistance / 2;
+			int startz = playerz - ViewDistance / 2;
+			int endx = playerx + ViewDistance / 2;
+			int endz = playerz + ViewDistance / 2;
 
 			for(int x = startx; x <= endx; x++)
 			{
@@ -51,15 +51,47 @@ public class WorldGenerator : MonoBehaviour
 						if(!_loadedChunks.ContainsKey(new Vector3(x, y, z)))
 						{
 							Chunk chunk = GenerateChunk(x, y, z);
-							chunk.UpdateMesh();
 							_loadedChunks.Add(new Vector3(x, y, z), chunk);
-							yield return new WaitForSeconds(.01f);
+							//chunk.UpdateMesh();
+
+							/*for(int chunkx = x-1; chunkx <= x + 1; chunkx++)
+							{
+								for(int chunky = y - 1; chunkx <= y + 1; chunky++)
+								{
+									for(int chunkz = z - 1; chunkz <= z + 1; chunkz++)
+									{
+										Chunk neigbour;
+										if(_loadedChunks.TryGetValue(new Vector3(chunkx,chunky,chunkz), out neigbour))
+										{
+											neigbour.UpdateMesh();
+										}
+									}
+								}
+							}*/
+
+							yield return new WaitForSeconds(.05f);
 						}
 					}
 				}
 			}
 
-			yield return new WaitForSeconds(.01f);
+			for(int x = startx; x <= endx; x++)
+			{
+				for(int z = startz; z <= endz; z++)
+				{
+					for(int y = 0; y < 4; y++)
+					{
+						Chunk chunk;
+						if(_loadedChunks.TryGetValue(new Vector3(x, y, z), out chunk))
+						{
+							chunk.UpdateMesh();
+							yield return new WaitForSeconds(.05f);
+						}
+					}
+				}
+			}
+
+			yield return new WaitForSeconds(.05f);
 		}
 	}
 
@@ -71,9 +103,9 @@ public class WorldGenerator : MonoBehaviour
 			{
 				foreach(Vector3 point in _loadedChunks.Keys)
 				{
-					/*if(startx < point.x || point.x < endx ||
-						startz < point.z || point.z < endz)*/
-					if(Vector3.Distance(point, _player.transform.position / Chunk.ChunkSize.x) > _viewDistance)
+					//if(startx < point.x || point.x < endx ||
+					//startz < point.z || point.z < endz)
+					if(Vector3.Distance(point, _player.transform.position / Chunk.ChunkSize.x) > ViewDistance)
 					{
 						Chunk chunk;
 						if(_loadedChunks.TryGetValue(point, out chunk))
@@ -95,7 +127,7 @@ public class WorldGenerator : MonoBehaviour
 
 	private Chunk GenerateChunk(int chunkX, int chunkY, int chunkZ)
 	{
-		GameObject chunkGO = (GameObject)Instantiate(_chunkPrefab, new Vector3(0, 0, 0), Quaternion.Euler(0, 0, 0));
+		GameObject chunkGO = (GameObject)Instantiate(_chunkPrefab, new Vector3(chunkX * Chunk.ChunkSize.x, chunkY * Chunk.ChunkSize.y, chunkZ * Chunk.ChunkSize.z), Quaternion.Euler(0, 0, 0));
 		Chunk chunk = chunkGO.GetComponent<Chunk>();
 		chunk.Initialize(new Vector3(chunkX, chunkY, chunkZ));
 
@@ -105,7 +137,7 @@ public class WorldGenerator : MonoBehaviour
 			{
 				for(int z = 0; z < Chunk.ChunkSize.z; z++)
 				{
-					var voxel = _sampler.SamplePosition((int)(chunkX * Chunk.ChunkSize.x + x), (int)(chunkY * Chunk.ChunkSize.y + y), (int)(chunkZ * Chunk.ChunkSize.z) + z);
+					Voxel voxel = _sampler.SamplePosition((int)(chunkX * Chunk.ChunkSize.x + x), (int)(chunkY * Chunk.ChunkSize.y + y), (int)(chunkZ * Chunk.ChunkSize.z) + z);
 
 					chunk.SetVoxel(voxel, x, y, z);
 				}
