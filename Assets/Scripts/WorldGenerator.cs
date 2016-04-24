@@ -13,6 +13,10 @@ public class WorldGenerator : MonoBehaviour
 	[SerializeField]
 	private GameObject _chunkPrefab;
 
+    [SerializeField]
+    private GameObject[] _treePrefabs;
+    private int currentTree;
+
 	public int ViewDistance = 50;
 
 	private Dictionary<Vector3, Chunk> _loadedChunks;
@@ -25,6 +29,8 @@ public class WorldGenerator : MonoBehaviour
 		VoxelSelector.SetLoadedChunks(_loadedChunks);
 
 		_player = ((GameObject)Instantiate(_playerPrefab, new Vector3(0, 110, 0), Quaternion.Euler(0, 0, 0))).transform;
+
+        currentTree = 0;
 
 		StartCoroutine("LoadChunks");
 		//StartCoroutine("UnloadChunks");
@@ -127,16 +133,30 @@ public class WorldGenerator : MonoBehaviour
 
 	private Chunk GenerateChunk(int chunkX, int chunkY, int chunkZ)
 	{
-		GameObject chunkGO = (GameObject)Instantiate(_chunkPrefab, new Vector3(chunkX * Chunk.ChunkSize.x, chunkY * Chunk.ChunkSize.y, chunkZ * Chunk.ChunkSize.z), Quaternion.Euler(0, 0, 0));
+        Vector3 chunkLocation = new Vector3(chunkX * Chunk.ChunkSize.x, chunkY * Chunk.ChunkSize.y, chunkZ * Chunk.ChunkSize.z);
+
+        GameObject chunkGO = (GameObject)Instantiate(_chunkPrefab, chunkLocation, Quaternion.Euler(0, 0, 0));
 		Chunk chunk = chunkGO.GetComponent<Chunk>();
 		chunk.Initialize(new Vector3(chunkX, chunkY, chunkZ));
+
+        int treeX = (int)Random.Range(0, Chunk.ChunkSize.x);
+        int treeZ = (int)Random.Range(0, Chunk.ChunkSize.z);
 
 		for(int x = 0; x < Chunk.ChunkSize.x; x++)
 		{
 			for(int z = 0; z < Chunk.ChunkSize.z; z++)
 			{
 				int groundHeight = (int)_sampler.GroundHeight(x + chunkX * (int)Chunk.ChunkSize.x, z+chunkZ * (int)Chunk.ChunkSize.z );
-				groundHeight -= (int)Chunk.ChunkSize.y * chunkY;
+
+                // test generate tree
+                if (x == treeX && z == treeZ)
+                {
+                    Instantiate(_treePrefabs[currentTree], new Vector3(chunkLocation.x + treeX, groundHeight - 0.5f, chunkLocation.z + treeZ), Quaternion.identity);
+                    currentTree++;
+                    currentTree %= _treePrefabs.Length;
+                }
+
+                groundHeight -= (int)Chunk.ChunkSize.y * chunkY;
 
 				for(int y = 0; y < groundHeight && y < Chunk.ChunkSize.y; y ++)
 				{
