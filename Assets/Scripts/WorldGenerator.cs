@@ -13,7 +13,7 @@ public class WorldGenerator : MonoBehaviour
 	[SerializeField]
 	private GameObject _chunkPrefab;
 
-	public int ViewDistance = 1;
+	public int ViewDistance = 50;
 
 	private Dictionary<Vector3, Chunk> _loadedChunks;
 
