@@ -7,4 +7,6 @@ public interface Biome
 	float GroundHeight(int x, int z);
 
 	float Bias(int x, int z);
+
+	bool GrowTrees();
 }

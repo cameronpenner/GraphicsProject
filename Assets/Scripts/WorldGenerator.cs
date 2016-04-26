@@ -13,7 +13,12 @@ public class WorldGenerator : MonoBehaviour
 	[SerializeField]
 	private GameObject _chunkPrefab;
 
-	public int ViewDistance = 1;
+	[SerializeField]
+	private GameObject[] _treePrefabs;
+
+	private int currentTree;
+
+	public int ViewDistance = 9;
 
 	private Dictionary<Vector3, Chunk> _loadedChunks;
 
@@ -25,6 +30,8 @@ public class WorldGenerator : MonoBehaviour
 		VoxelSelector.SetLoadedChunks(_loadedChunks);
 
 		_player = ((GameObject)Instantiate(_playerPrefab, new Vector3(0, 110, 0), Quaternion.Euler(0, 0, 0))).transform;
+
+		currentTree = 0;
 
 		StartCoroutine("LoadChunks");
 		//StartCoroutine("UnloadChunks");
@@ -69,7 +76,7 @@ public class WorldGenerator : MonoBehaviour
 								}
 							}*/
 
-							yield return new WaitForSeconds(.05f);
+							yield return new WaitForSeconds(.001f);
 						}
 					}
 				}
@@ -85,11 +92,13 @@ public class WorldGenerator : MonoBehaviour
 						if(_loadedChunks.TryGetValue(new Vector3(x, y, z), out chunk))
 						{
 							chunk.UpdateMesh();
-							yield return new WaitForSeconds(.05f);
+							yield return new WaitForSeconds(.001f);
 						}
 					}
 				}
 			}
+
+			_player.GetComponent<Rigidbody>().useGravity = true;
 
 			yield return new WaitForSeconds(.05f);
 		}
@@ -127,7 +136,9 @@ public class WorldGenerator : MonoBehaviour
 
 	private Chunk GenerateChunk(int chunkX, int chunkY, int chunkZ)
 	{
-		GameObject chunkGO = (GameObject)Instantiate(_chunkPrefab, new Vector3(chunkX * Chunk.ChunkSize.x, chunkY * Chunk.ChunkSize.y, chunkZ * Chunk.ChunkSize.z), Quaternion.Euler(0, 0, 0));
+		Vector3 chunkLocation = new Vector3(chunkX * Chunk.ChunkSize.x, chunkY * Chunk.ChunkSize.y, chunkZ * Chunk.ChunkSize.z);
+
+		GameObject chunkGO = (GameObject)Instantiate(_chunkPrefab, chunkLocation, Quaternion.Euler(0, 0, 0));
 		Chunk chunk = chunkGO.GetComponent<Chunk>();
 		chunk.Initialize(new Vector3(chunkX, chunkY, chunkZ));
 
@@ -135,10 +146,19 @@ public class WorldGenerator : MonoBehaviour
 		{
 			for(int z = 0; z < Chunk.ChunkSize.z; z++)
 			{
-				int groundHeight = (int)_sampler.GroundHeight(x + chunkX * (int)Chunk.ChunkSize.x, z+chunkZ * (int)Chunk.ChunkSize.z );
+				int groundHeight = (int)_sampler.GroundHeight(x + chunkX * (int)Chunk.ChunkSize.x, z + chunkZ * (int)Chunk.ChunkSize.z);
+
+				//generate tree
+				if(Random.Range(0f, 1f) < .003f && groundHeight >= 6 && groundHeight < 40)
+				{
+					Instantiate(_treePrefabs[currentTree], new Vector3(chunkLocation.x + x, groundHeight - 0.5f, chunkLocation.z + z), Quaternion.identity);
+					currentTree++;
+					currentTree %= _treePrefabs.Length;
+				}
+
 				groundHeight -= (int)Chunk.ChunkSize.y * chunkY;
 
-				for(int y = 0; y < groundHeight && y < Chunk.ChunkSize.y; y ++)
+				for(int y = 0; y < groundHeight && y < Chunk.ChunkSize.y; y++)
 				{
 					Voxel voxel = new Voxel();
 					voxel.on = true;

@@ -177,11 +177,11 @@ public class MeshGenerator
 		List<Vector3> newVertices = new List<Vector3>();
 		List<int> newTriangles = new List<int>();
 
-		for(int x = 0; x < Chunk.ChunkSize.x; x++)
+		for(int x = -1; x < Chunk.ChunkSize.x; x++)
 		{
-			for(int y = 0; y < Chunk.ChunkSize.y; y++)
+			for(int y = -1; y < Chunk.ChunkSize.y; y++)
 			{
-				for(int z = 0; z < Chunk.ChunkSize.z; z++)
+				for(int z = -1; z < Chunk.ChunkSize.z; z++)
 				{
 					bool[] cube =
 					{
