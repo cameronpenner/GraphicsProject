@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 
 public class WorldSampler
 {
@@ -36,28 +36,38 @@ public class WorldSampler
 
 	public float GroundHeight(int x, int z)
 	{
-        float height = 0f;
-        float mountainThresh = 0.9f;
-        float plainsThresh = 0.4f;
-        float mult = 1 / (mountainThresh - plainsThresh);
+		float height = 0f;
+		float blendThreshold = 0.1f;
+		Dictionary<float, Biome> biomes = new Dictionary<float, Biome>();
 
-        float bias = Mathf.PerlinNoise(x / 100f + 0.5f, z / 100f + 0.5f);
+		//get biases for biomes
+		foreach(Biome biome in _biomes)
+		{
+			float bias = biome.Bias(x, z);
+			biomes.Add(bias, biome);
+		}
 
-        if (bias > mountainThresh)
-        {
-            height = _biomes[0].GroundHeight(x, z);
-        }
-        else if (bias < plainsThresh)
-        {
-            height = _biomes[1].GroundHeight(x, z);
-        }
-        else
-        {
-            float weightMtns = Mathf.Pow(bias - plainsThresh, 2) * Mathf.Pow(mult, 2);
-            height += _biomes[0].GroundHeight(x, z) * weightMtns;
-            height += _biomes[1].GroundHeight(x, z) * (1 - weightMtns);
-        }
-        
-        return height;
+		//find most biased biome
+		float max = biomes.Keys.Max();
+
+		//used to average biomes when there's more than one
+		float amountBlended = 0;
+
+		foreach(float bias in biomes.Keys)
+		{
+			float diff = (max - bias);
+
+			//if current biome is close enough in bias to the most biased biome
+			if(diff <= blendThreshold)
+			{
+				float visibility = 1 - diff / blendThreshold; //between 0 and 1, 0 being not potent, and 1 being most potent
+				amountBlended += visibility;
+				height += biomes[bias].GroundHeight(x, z) * visibility;
+			}
+		}
+
+		height /= amountBlended;
+
+		return height;
 	}
 }
