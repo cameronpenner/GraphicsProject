@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class WorldSampler
 {
@@ -38,7 +39,7 @@ public class WorldSampler
 	public float GroundHeight(int x, int z)
 	{
 		float height = 0f;
-		float blendThreshold = 0.1f;
+		float blendThreshold = 0.2f;
 		Dictionary<float, Biome> biomes = new Dictionary<float, Biome>();
 
 		//get biases for biomes
@@ -50,6 +51,8 @@ public class WorldSampler
 
 		//find most biased biome
 		float max = biomes.Keys.Max();
+
+		//Debug.Log("main biome: "+biomes[max]);
 
 		//used to average biomes when there's more than one
 		float amountBlended = 0;
@@ -70,5 +73,29 @@ public class WorldSampler
 		height /= amountBlended;
 
 		return height;
+	}
+
+	public Biome Biome(int x, int z)
+	{
+		float max = 0;
+		Biome biomeMain = null;
+
+		//get biases for biomes
+		foreach(Biome biome in _biomes)
+		{
+			float bias = biome.Bias(x, z);
+			if(bias > max)
+			{
+				biomeMain = biome;
+				max = bias;
+			}
+		}
+
+		return biomeMain;
+	}
+
+	public float TreeChance(int x, int z)
+	{
+		return Biome(x, z).GrowTrees() ? 0f : 1;
 	}
 }

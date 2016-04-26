@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class RiverBiome : Biome
 {
@@ -33,5 +34,11 @@ public class RiverBiome : Biome
 		bias = Mathf.Clamp(bias, 0, 1);//clamp bias
 
 		return bias;
+	}
+
+	public bool GrowTrees()
+	{
+		Debug.Log("Don't grow tree");
+		return false;
 	}
 }

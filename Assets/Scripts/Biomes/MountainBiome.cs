@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class MountainBiome : Biome
 {
@@ -33,7 +34,7 @@ public class MountainBiome : Biome
 
 	private float PerlinSample(float x, float z)
 	{
-		var height = TerrainAmplitude * Mathf.PerlinNoise((NoiseScale) * x + NoiseOffset, (NoiseScale) * z + NoiseOffset);
+		var height = TerrainAmplitude * Mathf.PerlinNoise((NoiseScale) * x + NoiseOffset, (NoiseScale) * z + NoiseOffset) + 20*Mathf.PerlinNoise((NoiseScale/20) * x + NoiseOffset, (NoiseScale/20) * z + NoiseOffset);
 
 		return height;
 	}
@@ -41,5 +42,11 @@ public class MountainBiome : Biome
 	public float Bias(int x, int z)
 	{
 		return Mathf.PerlinNoise(x / 100f + .6234852f, z / 100f + .1237692f);
+	}
+
+	public bool GrowTrees()
+	{
+		//Debug.Log("mountain, grow tree");
+		return true;
 	}
 }

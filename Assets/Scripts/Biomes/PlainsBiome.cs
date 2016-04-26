@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PlainsBiome : Biome
 {
@@ -40,5 +41,11 @@ public class PlainsBiome : Biome
 	public float Bias(int x, int z)
 	{
 		return Mathf.PerlinNoise(x / 100f + .8327094f, z / 100f + .1926389f);
+	}
+
+	public bool GrowTrees()
+	{
+		//Debug.Log("plains, grow tree");
+		return true;
 	}
 }

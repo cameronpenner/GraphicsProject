@@ -5,7 +5,9 @@ public class Chunk : MonoBehaviour
 	public static readonly Vector3 ChunkSize = new Vector3(16, 16, 16);
 
 	[SerializeField]
-	private GameObject _block;
+	private GameObject _water;
+
+	private GameObject _player;
 
 	[SerializeField]
 	private MeshFilter _meshFilter;
@@ -23,6 +25,12 @@ public class Chunk : MonoBehaviour
 		_chunkPosition = chunkPosition;
 
 		_blocks = new Voxel[(int)ChunkSize.x, (int)ChunkSize.y, (int)ChunkSize.z];
+
+		if(chunkPosition.y == 0)
+		{
+			GameObject water = (GameObject)Instantiate(_water, transform.position, transform.rotation);
+			water.transform.parent = transform;
+		}
 	}
 
 	public void SetVoxel(Voxel voxel, int x, int y, int z)
