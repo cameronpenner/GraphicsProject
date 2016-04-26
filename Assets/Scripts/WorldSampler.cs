@@ -10,6 +10,7 @@ public class WorldSampler
 		_biomes = new List<Biome>();
 		_biomes.Add(new MountainBiome());
 		_biomes.Add(new PlainsBiome());
+		_biomes.Add(new RiverBiome());
 	}
 
 	public Voxel SamplePosition(int x, int y, int z)
